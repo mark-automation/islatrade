@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }} — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap">
+ <div class="crumb"><a href="/">Home</a> › <a href="/products">Products</a> › {{ p.name }}</div>
+ <div class="detail">
+  <div><div class="bigthumb">{% if p.image_url %}<img src="{{ p.image_url }}" alt="{{ p.name }}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.style.display='none';this.parentNode.textContent='{{ p.cicon }}'">{% else %}{{ p.cicon }}{% endif %}</div>
+   <div style="display:flex;gap:8px;margin-top:10px">
+    {% for i in [1,2,3] %}<div class="bigthumb" style="height:64px;font-size:28px">{{ p.cicon }}</div>{% endfor %}
+   </div></div>
+  <div>
+   <h1 style="font-size:22px;margin-bottom:8px">{{ p.name }}</h1>
+   <div class="rating" style="font-size:14px">★ {{ p.rating }} · {{ p.orders }} orders ·
+    {% if p.sverified %}<span class="verified">✔ Verified supplier</span>{% endif %}</div>
+   <div class="price" style="font-size:26px;margin-top:12px">₱{{ '%.0f'|format(p.price_min) }}–₱{{ '%.0f'|format(p.price_max) }}
+    <small style="color:var(--mut);font-size:13px">/ {{ p.unit }}</small></div>
+   <table class="specs">
+    <tr><td>Min. order</td><td><b>{{ p.moq }}</b></td></tr>
+    <tr><td>Lead time</td><td>{{ p.lead_days }} days after confirmation</td></tr>
+    <tr><td>Industry</td><td><a href="/products?cat={{ p.cslug }}">{{ p.cname }}</a></td></tr>
+    <tr><td>Supplier</td><td><a href="/supplier/{{ p.sslug }}">{{ p.sname }}</a> — {{ p.city }}, {{ p.region }}</td></tr>
+    <tr><td>Response rate</td><td>{{ p.response_rate }}% within 24h</td></tr>
+   </table>
+   <a class="btn gold" href="/rfq?product={{ p.id }}">Contact supplier — get quote</a>
+   <a class="btn" href="/rfq" style="margin-left:8px;background:#fff;color:var(--navy);border:1px solid var(--line)">Post general RFQ</a>
+   <p style="margin-top:16px;font-size:14px;line-height:1.6;color:#3c4657">{{ p.descr }}</p>
+  </div>
+ </div>
+ {% if related %}<h2 class="sec">Related products</h2>
+ <div class="grid g4">{% for r in related %}
+  <a class="card" href="/product/{{ r.slug }}"><div class="thumb">{% if r.image_url %}<img src="{{ r.image_url }}" alt="{{ r.name }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">{% else %}{{ r.name.split()[0][:12] }}{% endif %}</div>
+   <div class="pbody"><div class="pname">{{ r.name }}</div>
+    <div class="price">₱{{ '%.0f'|format(r.price_min) }}+ </div><div class="meta">{{ r.sname }}</div></div></a>{% endfor %}
+ </div>{% endif %}
+</div>
+{% endblock %}

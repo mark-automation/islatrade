@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Post RFQ — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap">
+ <div class="crumb"><a href="/">Home</a> › Post RFQ</div>
+ <div class="panel" style="max-width:640px;margin:0 auto">
+  <h2 style="font-size:20px;margin-bottom:4px">Request for Quotation</h2>
+  <p class="muted">Tell suppliers what you need — verified manufacturers respond with quotes, usually within 24h.</p>
+  {% if p %}<div style="background:#eef6ff;border-radius:8px;padding:10px 14px;margin-top:12px;font-size:13.5px">
+   📌 Regarding: <b>{{ p.name }}</b> — {{ p.sname }}</div>{% endif %}
+  <form method="post" action="/rfq">
+   <input type="hidden" name="product" value="{{ p.id if p else (product or 0) }}">
+   <label>Category</label>
+   <select name="category" class="f"><option value="0">General / other</option>
+    {% for c in cats %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select>
+   <label>Your name *</label><input class="f" name="name" required>
+   <label>Email *</label><input class="f" type="email" name="email" required>
+   <label>Phone</label><input class="f" name="phone">
+   <label>Company</label><input class="f" name="company">
+   <label>Quantity needed</label><input class="f" name="qty" placeholder="e.g. 500 pcs / monthly">
+   <label>Details</label><textarea class="f" name="message" rows="4" placeholder="Specs, materials, certifications, delivery target…"></textarea>
+   <button class="btn gold" style="margin-top:16px;width:100%">Send to suppliers</button>
+  </form>
+ </div>
+</div>
+{% endblock %}

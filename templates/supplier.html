@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ s.name }} — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap">
+ <div class="crumb"><a href="/">Home</a> › <a href="/suppliers">Suppliers</a> › {{ s.name }}</div>
+ <div class="panel" style="display:flex;gap:20px;align-items:center">
+  <div style="font-size:54px">{{ s.industry[:2] }}🏭</div>
+  <div>
+   <h1 style="font-size:22px">{{ s.name }}
+    {% if s.verified %}<span class="verified">✔ VERIFIED</span>{% endif %}</h1>
+   <div class="rating">★ {{ s.rating }} · {{ s.years }} yrs active · {{ s.response_rate }}% response rate</div>
+   <div class="meta" style="margin-top:6px">📍 {{ s.city }}, {{ s.region }} · {{ s.industry }} · {{ prods|length }} products listed</div>
+  </div>
+ </div>
+ <h2 class="sec">Products from this supplier</h2>
+ <div class="grid g4">
+  {% for p in prods %}
+  <a class="card" href="/product/{{ p.slug }}"><div class="thumb">{{ p.name.split()[0][:12] }}</div>
+   <div class="pbody"><div class="pname">{{ p.name }}</div>
+    <div class="price">₱{{ '%.0f'|format(p.price_min) }}–₱{{ '%.0f'|format(p.price_max) }} <small>/ {{ p.unit }}</small></div>
+    <div class="meta">MOQ {{ p.moq }}</div></div></a>
+  {% endfor %}
+ </div>
+ <div style="margin-top:22px"><a class="btn gold" href="/rfq">Request quotation</a></div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Inquiry tracking — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap">
+ <div class="crumb"><a href="/">Home</a> › Inquiry tracking</div>
+ <div class="panel" style="max-width:760px;margin:0 auto">
+  <h2 style="font-size:20px">Track your inquiries</h2>
+  <form method="get" action="/rfq/tracking" class="filters" style="margin-top:10px">
+   <input name="email" type="email" value="{{ email }}" placeholder="the email you used" required style="min-width:240px">
+   <button class="btn" style="padding:7px 20px">Check quotes</button>
+  </form>
+  {% if email %}
+   {% if not rfqs %}<p class="muted" style="margin-top:14px">No inquiries found for {{ email }}.</p>{% endif %}
+   {% for r in rfqs %}
+    <div class="row" style="border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0">
+     <b>RFQ #{{ r.id }}</b> — {{ r.qty or 'qty n/a' }} · {{ r.message[:100] }}
+     {% set nq = quotes|selectattr('rfq_id','equalto',r.id)|list %}
+     <span class="chip">{{ nq|length }} quote{{ 's' if nq|length != 1 }}</span>
+     {% for q in nq %}
+      <div style="background:#f0f7ff;border-radius:8px;padding:8px 12px;margin-top:8px">
+       <b>{{ q.sname }}</b> — <b style="color:var(--red)">₱{{ '%.2f'|format(q.price) }}</b>
+       · lead {{ q.lead_days }} days
+       <div class="muted">{{ q.message }}</div>
+      </div>
+     {% endfor %}
+    </div>
+   {% endfor %}
+  {% endif %}
+ </div>
+</div>
+{% endblock %}

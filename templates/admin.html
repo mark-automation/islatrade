@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}{{ me.name }} — Supplier Dashboard — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap" style="margin:28px auto">
+ <h1>Supplier Dashboard</h1>
+ <p>Signed in as <b>{{ me.name }}</b> · {{ me.city }}, {{ me.region }} · <a href="/logout">Log out</a></p>
+
+ <div class="card" style="padding:22px;margin:18px 0">
+  <h2 style="margin-top:0">🔔 Notifications
+   {% if unread %}<span style="background:#c0392b;color:#fff;border-radius:12px;padding:1px 10px;font-size:13px">{{ unread }} new</span>{% endif %}</h2>
+  {% if not notifs %}<p>No notifications yet.</p>{% else %}
+  <ul style="list-style:none;padding:0;margin:0;font-size:14px">
+   {% for n in notifs[:8] %}
+   <li style="padding:7px 4px;border-bottom:1px solid #eee;{% if not n.read %}font-weight:600;background:#f4f8ff;border-radius:6px;{% endif %}">
+    🔔 {{ n.text }} · <a href="/rfq/tracking" style="color:#0a6ebd">view</a>
+    <span style="color:#999;font-weight:400">{{ n.created|ago }}</span></li>
+   {% endfor %}
+  </ul>
+  <form method="post" action="/supplier-admin/notifications/read" style="margin-top:10px">
+   <button style="padding:7px 16px;background:#555;color:#fff;border:0;border-radius:6px;font-size:13px">Mark all read</button>
+  </form>
+  {% endif %}
+ </div>
+
+ <div class="card" style="padding:22px;margin:18px 0">
+  <h2 style="margin-top:0">📥 RFQ Inbox <span style="color:#888;font-size:14px">({{ inbox|length }})</span></h2>
+  {% if not inbox %}<p>No inquiries yet. Buyers' RFQs matching your categories land here automatically.</p>{% endif %}
+  <table style="width:100%;border-collapse:collapse;font-size:14px">
+   {% for r in inbox %}
+   <tr style="border-bottom:1px solid #eee">
+    <td style="padding:8px 6px"><b>{{ r.name }}</b>{% if r.company %} · {{ r.company }}{% endif %}<br>
+     <span style="color:#666">{{ r.email }}{% if r.phone %} · {{ r.phone }}{% endif %}</span></td>
+    <td style="padding:8px 6px">{% if r.pname %}re: <a href="/product/{{ p.slug if p else '' }}">{{ r.pname }}</a>{% else %}general{% endif %}</td>
+    <td style="padding:8px 6px">qty: {{ r.qty or "—" }}</td>
+    <td style="padding:8px 6px;max-width:320px">{{ (r.message or "")[:160] }}</td>
+    <td style="padding:8px 6px;color:#999;white-space:nowrap">{{ r.created|ago }}</td>
+    <td style="padding:8px 6px">
+     <form method="post" action="/supplier-admin/rfq/{{ r.id }}/quote" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+      ₱<input name="price" type="number" step="0.01" required placeholder="quote" style="width:85px;padding:5px;border:1px solid #ddd;border-radius:4px">
+      <input name="lead_days" type="number" value="14" title="lead days" style="width:55px;padding:5px;border:1px solid #ddd;border-radius:4px">
+      <input name="message" placeholder="terms" style="width:110px;padding:5px;border:1px solid #ddd;border-radius:4px">
+      <button class="btn" style="padding:5px 12px;font-size:12px;background:#0038a8">Quote</button>
+     </form>
+    </td>
+   </tr>
+   {% endfor %}
+  </table>
+ </div>
+
+ <div class="card" style="padding:22px;margin:18px 0">
+  <h2 style="margin-top:0">➕ Post a New Product</h2>
+  <form method="post" action="/supplier-admin/products/new">
+   <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <label style="flex:2 1 240px">Product name<br><input name="name" required style="width:100%;padding:9px;margin:4px 0"></label>
+    <label style="flex:1 1 180px">Category<br>
+     <select name="category_id" style="width:100%;padding:9px;margin:4px 0">
+      <option value="0">— none —</option>
+      {% for c in cats %}<option value="{{ c.id }}">{{ c.icon }} {{ c.name }}</option>{% endfor %}
+     </select></label>
+   </div>
+   <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <label>Price min ₱<br><input name="price_min" type="number" step="0.01" style="width:110px;padding:9px;margin:4px 0"></label>
+    <label>Price max ₱<br><input name="price_max" type="number" step="0.01" style="width:110px;padding:9px;margin:4px 0"></label>
+    <label>Unit<br><input name="unit" value="per pc" style="width:120px;padding:9px;margin:4px 0"></label>
+    <label>MOQ<br><input name="moq" type="number" value="1" style="width:90px;padding:9px;margin:4px 0"></label>
+    <label>Lead days<br><input name="lead_days" type="number" value="14" style="width:90px;padding:9px;margin:4px 0"></label>
+   </div>
+   <label>Description<br><textarea name="descr" rows="3" style="width:100%;padding:9px;margin:4px 0"></textarea></label>
+   <label>Image URL <span style="color:#888;font-size:12px">(optional — category art used if blank)</span><br><input name="image_url" placeholder="/static/img/… or https://…" style="width:100%;padding:9px;margin:4px 0"></label>
+   <button style="padding:11px 26px;background:#0a6ebd;color:#fff;border:0;border-radius:8px;font-size:15px">Publish product</button>
+  </form>
+ </div>
+
+ <div class="card" style="padding:22px;margin:18px 0">
+  <h2 style="margin-top:0">📦 My Products <span style="color:#888;font-size:14px">({{ prods|length }})</span></h2>
+  <table style="width:100%;border-collapse:collapse;font-size:14px">
+   {% for p in prods %}
+   <tr style="border-bottom:1px solid #eee">
+    <td style="padding:8px 6px"><a href="/product/{{ p.slug }}">{{ p.name }}</a><br>
+     <span style="color:#666">₱{{ '%g'|format(p.price_min) }}–₱{{ '%g'|format(p.price_max) }} {{ p.unit }} · MOQ {{ p.moq }}</span></td>
+    <td style="padding:8px 6px;text-align:right">
+     <details style="display:inline-block;text-align:left">
+      <summary style="cursor:pointer;color:#0a6ebd">Edit</summary>
+      <form method="post" action="/supplier-admin/products/{{ p.id }}/edit" style="margin-top:8px;min-width:280px;background:#f7f9fb;padding:10px;border-radius:8px">
+       <input name="name" value="{{ p.name }}" required style="width:100%;padding:7px;margin:3px 0"><br>
+       ₱<input name="price_min" type="number" step="0.01" value="{{ p.price_min }}" style="width:95px;padding:7px;margin:3px 0">
+       – ₱<input name="price_max" type="number" step="0.01" value="{{ p.price_max }}" style="width:95px;padding:7px;margin:3px 0">
+       <input name="unit" value="{{ p.unit }}" style="width:110px;padding:7px;margin:3px 0"><br>
+       MOQ <input name="moq" type="number" value="{{ p.moq }}" style="width:80px;padding:7px;margin:3px 0">
+       lead <input name="lead_days" type="number" value="{{ p.lead_days }}" style="width:70px;padding:7px;margin:3px 0"> days<br>
+       <textarea name="descr" rows="2" style="width:100%;padding:7px;margin:3px 0">{{ p.descr }}</textarea><br>
+       <input name="image_url" value="{{ p.image_url or '' }}" placeholder="image URL (blank = keep)" style="width:100%;padding:7px;margin:3px 0"><br>
+       <button style="padding:7px 16px;background:#0a6ebd;color:#fff;border:0;border-radius:6px">Save</button>
+      </form>
+     </details>
+     <form method="post" action="/supplier-admin/products/{{ p.id }}/delete" style="display:inline"
+           onsubmit="return confirm('Delete {{ p.name }}?')">
+      <button style="padding:7px 12px;background:#c0392b;color:#fff;border:0;border-radius:6px">Delete</button>
+     </form>
+    </td>
+   </tr>
+   {% endfor %}
+  </table>
+ </div>
+</div>
+{% endblock %}

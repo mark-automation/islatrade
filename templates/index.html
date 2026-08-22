@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero"><div class="wrap">
+ <h1>Source from the Philippines. Verified.</h1>
+ <p>Alibaba-grade B2B marketplace — Filipino manufacturers, growers and makers, ready for export.</p>
+ <div class="stats">
+  <div><b>{{ stats.suppliers }}</b><span>Verified suppliers</span></div>
+  <div><b>{{ stats.products }}</b><span>Products listed</span></div>
+  <div><b>{{ stats.regions }}</b><span>Regions covered</span></div>
+ </div>
+</div></section>
+<div class="wrap">
+ <h2 class="sec">Browse by industry</h2>
+ <div class="grid g4">
+  {% for c in cats %}<a class="cattile" href="/products?cat={{ c.slug }}"><span class="ic">{{ c.icon }}</span>{{ c.name }}<small>{{ c.blurb }}</small></a>{% endfor %}
+ </div>
+ <h2 class="sec">Featured products <a href="/products">View all →</a></h2>
+ <div class="grid g4">
+  {% for p in featured %}
+  <a class="card" href="/product/{{ p.slug }}"><div class="thumb">{% if p.image_url %}<img src="{{ p.image_url }}" alt="{{ p.name }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='{{ p.name.split()[0][:12] }}'">{% else %}{{ p.name.split()[0][:12] }}{% endif %}</div>
+   <div class="pbody"><div class="pname">{{ p.name }}</div>
+    <div class="price">₱{{ '%.0f'|format(p.price_min) }}–₱{{ '%.0f'|format(p.price_max) }} <small>/ {{ p.unit }}</small></div>
+    <div class="meta">Min. order {{ p.moq }} · {{ p.sname }}</div>
+   </div></a>
+  {% endfor %}
+ </div>
+ <h2 class="sec">Top verified suppliers <a href="/suppliers">All suppliers →</a></h2>
+ <div class="grid g4">
+  {% for s in top %}
+  <a class="card supcard" href="/supplier/{{ s.slug }}">
+   <span class="verified">{% if s.verified %}✔ VERIFIED{% endif %}</span>
+   <h3>{{ s.name }}</h3>
+   <div class="rating">★ {{ s.rating }} · {{ s.years }} yrs</div>
+   <div class="meta">{{ s.city }}, {{ s.region }} · {{ s.np }} products</div>
+  </a>
+  {% endfor %}
+ </div>
+</div>
+{% endblock %}

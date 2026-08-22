@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}IslaTrade{% endblock %}</title><link rel="stylesheet" href="/static/styles.css"></head>
+<body>
+<header><div class="wrap">
+ <a class="logo" href="/">Isla<span>Trade</span></a>
+ <form action="/products"><input name="q_" placeholder="Search products, suppliers…"><button>Search</button></form>
+ <nav><a href="/products">Products</a><a href="/suppliers">Suppliers</a><a href="/rfq">Post RFQ</a>
+ {% if me %}<a href="/supplier-admin">Dashboard ({{ me.name }})</a><a href="/logout">Log out</a>
+ {% else %}<a href="/register">Supplier Register</a><a href="/login">Log in</a>{% endif %}</nav>
+</div></header>
+{% block content %}{% endblock %}
+<footer><div class="wrap">IslaTrade — The Philippines' B2B Marketplace · Connect with verified Filipino suppliers across 8 industries<br>
+Manufacturing · Export · OEM/ODM · RFQ-driven sourcing</div></footer>
+</body></html>

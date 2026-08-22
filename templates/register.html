@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Register as Supplier — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap" style="max-width:460px;margin:48px auto">
+ <div class="card" style="padding:28px">
+  <h1 style="margin-top:0">Register as a Supplier</h1>
+  <p style="color:#666;font-size:14px">Free account. List your products and receive RFQs from buyers worldwide.</p>
+  {% if err %}<p style="color:#c0392b">{{ err }}</p>{% endif %}
+  <form method="post" action="/register">
+   <label>Company name<br><input name="company" required style="width:100%;padding:10px;margin:6px 0 14px"></label>
+   <label>Email<br><input name="email" type="email" required style="width:100%;padding:10px;margin:6px 0 14px"></label>
+   <label>Password (6+ chars)<br><input name="pw" type="password" required minlength="6" style="width:100%;padding:10px;margin:6px 0 14px"></label>
+   <div style="display:flex;gap:10px">
+    <label style="flex:1">Region<br><input name="region" value="Metro Manila" style="width:100%;padding:10px;margin:6px 0"></label>
+    <label style="flex:1">City<br><input name="city" placeholder="e.g. Cebu City" style="width:100%;padding:10px;margin:6px 0"></label>
+   </div>
+   <button style="width:100%;padding:12px;background:#0a6ebd;color:#fff;border:0;border-radius:8px;font-size:16px">Create account</button>
+  </form>
+  <p style="margin-top:18px;font-size:14px">Already registered? <a href="/login">Log in</a></p>
+ </div>
+</div>
+{% endblock %}
