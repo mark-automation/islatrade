@@ -23,6 +23,18 @@
        <div class="muted">{{ q.message }}</div>
       </div>
      {% endfor %}
+     {% set thread = msgs|selectattr('rfq_id','equalto',r.id)|list %}
+     {% if thread %}<div class="grp">Messages</div>{% endif %}
+     {% for m in thread %}
+      <div class="row" style="background:#f7f9fb;border-radius:6px;padding:4px 10px;margin:3px 0">
+       <b>{{ 'You' if m.sender=='buyer' else 'Supplier' }}:</b> {{ m.text[:200] }}</div>
+     {% endfor %}
+     <form method="post" action="/rfq/tracking/message" style="display:flex;gap:6px;margin-top:8px">
+      <input type="hidden" name="rfq_id" value="{{ r.id }}">
+      <input type="hidden" name="email" value="{{ email }}">
+      <input class="f" name="text" placeholder="Message supplier…" required style="flex:1">
+      <button class="btn" style="padding:7px 16px;font-size:12.5px">Send</button>
+     </form>
     </div>
    {% endfor %}
   {% endif %}

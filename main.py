@@ -61,6 +61,9 @@ CREATE TABLE IF NOT EXISTS messages(
 CREATE TABLE IF NOT EXISTS notifications(
   id INTEGER PRIMARY KEY, supplier_id INTEGER REFERENCES suppliers(id),
   rfq_id INTEGER, text TEXT, read INTEGER DEFAULT 0, created REAL);
+CREATE TABLE IF NOT EXISTS reviews(
+  id INTEGER PRIMARY KEY, product_id INTEGER REFERENCES products(id),
+  author TEXT, email TEXT, rating INTEGER, text TEXT, created REAL);
 """
 
 MIGRATIONS = [
@@ -435,11 +438,15 @@ def supplier_admin(request: Request):
                  WHERE p.supplier_id=? OR (r.category_id IN
                    (SELECT category_id FROM products WHERE supplier_id=?))
                  ORDER BY r.created DESC LIMIT 50""", (me["id"], me["id"]))
-    cats = q("SELECT * FROM categories ORDER BY id")
+    ids = [r["id"] for r in inbox]
+    msgs = []
+    if ids:
+        marks = ",".join("?" * len(ids))
+        msgs = q(f"SELECT * FROM messages WHERE rfq_id IN ({marks}) ORDER BY created", tuple(ids))
     notifs = q("SELECT * FROM notifications WHERE supplier_id=? ORDER BY id DESC LIMIT 30", (me["id"],))
     unread = q("SELECT COUNT(*) n FROM notifications WHERE supplier_id=? AND read=0",
                (me["id"],), one=True)["n"]
-    return resp(request, "admin.html", me=me, prods=my_products, inbox=inbox, cats=cats,
+    return resp(request, "admin.html", me=me, prods=my_products, inbox=inbox, msgs=msgs,
                 notifs=notifs, unread=unread)
 
 
@@ -527,7 +534,29 @@ def rfq_tracking(request: Request, email: str = ""):
             quotes = q(f"SELECT q.*, s.name sname FROM quotes q "
                        f"JOIN suppliers s ON s.id=q.supplier_id WHERE q.rfq_id IN ({marks})",
                        tuple(ids))
-    return resp(request, "rfq_track.html", email=email, rfqs=rfqs, quotes=quotes)
+    msgs = q(f"SELECT * FROM messages WHERE LOWER(email)=? ORDER BY created", (email.lower().strip(),)) if email else []
+    return resp(request, "rfq_track.html", email=email, rfqs=rfqs, quotes=quotes, msgs=msgs)
+
+
+@app.post("/rfq/tracking/message")
+def buyer_message(request: Request, rfq_id: int = Form(0), email: str = Form(""), text: str = Form("")):
+    if not (rfq_id and email and text):
+        return RedirectResponse(f"/rfq/tracking?email={email}", status_code=302)
+    with db() as con:
+        con.execute("INSERT INTO messages(rfq_id,sender,email,text,created) VALUES(?,?,?,?,?)",
+                    (rfq_id, "buyer", email.lower(), text, _t.time()))
+    return RedirectResponse(f"/rfq/tracking?email={email}", status_code=302)
+
+
+@app.post("/supplier-admin/rfq/{rfq_id}/message")
+def supplier_message(request: Request, rfq_id: int, text: str = Form("")):
+    me = current_supplier(request)
+    if not me or not text:
+        return RedirectResponse("/supplier-admin", status_code=302)
+    with db() as con:
+        con.execute("INSERT INTO messages(rfq_id,sender,supplier_id,text,created) VALUES(?,?,?,?,?)",
+                    (rfq_id, "supplier", me["id"], text, _t.time()))
+    return RedirectResponse("/supplier-admin", status_code=302)
 
 
 @app.get("/api/products")

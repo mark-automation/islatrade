@@ -25,26 +25,31 @@
  <div class="card" style="padding:22px;margin:18px 0">
   <h2 style="margin-top:0">📥 RFQ Inbox <span style="color:#888;font-size:14px">({{ inbox|length }})</span></h2>
   {% if not inbox %}<p>No inquiries yet. Buyers' RFQs matching your categories land here automatically.</p>{% endif %}
-  <table style="width:100%;border-collapse:collapse;font-size:14px">
-   {% for r in inbox %}
-   <tr style="border-bottom:1px solid #eee">
-    <td style="padding:8px 6px"><b>{{ r.name }}</b>{% if r.company %} · {{ r.company }}{% endif %}<br>
-     <span style="color:#666">{{ r.email }}{% if r.phone %} · {{ r.phone }}{% endif %}</span></td>
-    <td style="padding:8px 6px">{% if r.pname %}re: <a href="/product/{{ p.slug if p else '' }}">{{ r.pname }}</a>{% else %}general{% endif %}</td>
-    <td style="padding:8px 6px">qty: {{ r.qty or "—" }}</td>
-    <td style="padding:8px 6px;max-width:320px">{{ (r.message or "")[:160] }}</td>
-    <td style="padding:8px 6px;color:#999;white-space:nowrap">{{ r.created|ago }}</td>
-    <td style="padding:8px 6px">
-     <form method="post" action="/supplier-admin/rfq/{{ r.id }}/quote" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
-      ₱<input name="price" type="number" step="0.01" required placeholder="quote" style="width:85px;padding:5px;border:1px solid #ddd;border-radius:4px">
-      <input name="lead_days" type="number" value="14" title="lead days" style="width:55px;padding:5px;border:1px solid #ddd;border-radius:4px">
-      <input name="message" placeholder="terms" style="width:110px;padding:5px;border:1px solid #ddd;border-radius:4px">
+  {% for r in inbox %}
+   <div class="row" style="border-bottom:1px solid #eee;padding-bottom:10px;margin-bottom:10px">
+    <b>{{ r.name }}</b>{% if r.company %} · {{ r.company }}{% endif %} — qty: {{ r.qty or "—" }} · RFQ #{{ r.id }}
+    <div style="color:#666">{{ r.email }}</div>
+    <div style="max-width:480px;color:#444">{{ (r.message or "")[:160] }}</div>
+    {% set thread = msgs|selectattr('rfq_id','equalto',r.id)|list %}
+    {% for m in thread %}
+     <div style="background:#f2f7ff;border-radius:6px;padding:4px 10px;margin:3px 0;font-size:13px">
+      <b>{% if m.sender=='supplier' %}You{% else %}{{ r.name }}{% endif %}:</b> {{ m.text[:200] }}</div>
+    {% endfor %}
+    <form method="post" action="/supplier-admin/rfq/{{ r.id }}/message" style="display:flex;gap:5px;margin-top:5px">
+     <input name="text" placeholder="reply to buyer…" required style="flex:1;padding:6px;border:1px solid #ddd;border-radius:4px">
+     <button class="btn" style="padding:6px 14px;font-size:12px;background:#0038a8">Reply</button>
+    </form>
+    <details style="margin-top:6px">
+     <summary style="cursor:pointer;color:#0a6ebd;font-size:12.5px">Send formal quote</summary>
+     <form method="post" action="/supplier-admin/rfq/{{ r.id }}/quote" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:6px">
+      ₱<input name="price" type="number" step="0.01" required placeholder="price" style="width:90px;padding:5px;border:1px solid #ddd;border-radius:4px">
+      lead<input name="lead_days" type="number" value="14" style="width:50px;padding:5px;border:1px solid #ddd;border-radius:4px">days
+      <input name="message" placeholder="terms" style="flex:1;min-width:110px;padding:5px;border:1px solid #ddd;border-radius:4px">
       <button class="btn" style="padding:5px 12px;font-size:12px;background:#0038a8">Quote</button>
      </form>
-    </td>
-   </tr>
-   {% endfor %}
-  </table>
+    </details>
+   </div>
+  {% else %}<p class="muted">Inbox empty. Buyers' RFQs matching your categories land here.</p>{% endfor %}
  </div>
 
  <div class="card" style="padding:22px;margin:18px 0">
