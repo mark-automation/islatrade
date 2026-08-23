@@ -25,6 +25,7 @@
     <span class="verified" style="color:#0a6ebd">🛡 TRADE ASSURED</span></div>
    <div class="price" style="font-size:26px;margin-top:12px">₱180–₱2400
     <small style="color:var(--mut);font-size:13px">/ per board</small></div>
+   <div style="font-size:12.5px;color:#5f7a6f">≈ $3–$39 USD <span class="muted">(rate 61.66)</span></div>
    <table class="specs">
     <tr><td>Min. order</td><td><b>50</b></td></tr>
     <tr><td>Lead time</td><td>14 days after confirmation</td></tr>
@@ -52,7 +53,7 @@
   </div>
   <div class="panel">
    <b style="font-size:13.5px">Leave a review</b>
-   <form method="post" action="../../product/custom-pcb-assembly-smt-tht-1/review">
+   <form method="post" action="#">
     <label>Your name *</label><input class="f" name="author" required>
     <label>Email (private) *</label><input class="f" type="email" name="email" required>
     <label>Rating</label>
@@ -78,4 +79,18 @@
 
 <footer><div class="wrap">IslaTrade — The Philippines' B2B Marketplace · Connect with verified Filipino suppliers across 8 industries<br>
 Manufacturing · Export · OEM/ODM · RFQ-driven sourcing</div></footer>
+
+<script>
+document.querySelectorAll('form[method=post]').forEach(function(f){
+ f.addEventListener('submit',function(e){
+  e.preventDefault();
+  var t=document.getElementById('mirror-note');
+  if(!t){t=document.createElement('div');t.id='mirror-note';
+   t.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:8px;font:14px system-ui;z-index:9999;box-shadow:0 6px 18px rgba(0,0,0,.35)';
+   document.body.appendChild(t);}
+  t.textContent='Preview mirror \u2014 sign-ups, RFQs and reviews run on the live IslaTrade app.';
+  clearTimeout(t._h);t._h=setTimeout(function(){t.remove()},3500);
+ });
+});
+</script>
 </body></html>

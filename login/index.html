@@ -5,7 +5,7 @@
 <meta property="og:title" content="IslaTrade — The Philippines' B2B Marketplace">
 <meta property="og:description" content="Source from verified Filipino suppliers across 8 industries. Post RFQs, compare quotes, track orders.">
 
-<title>Post RFQ — IslaTrade</title><link rel="stylesheet" href="../static/styles.css"></head>
+<title>Supplier Login — IslaTrade</title><link rel="stylesheet" href="../static/styles.css"></head>
 <body>
 <header><div class="wrap">
  <a class="logo" href="../">Isla<span>Trade</span></a>
@@ -14,25 +14,17 @@
   <a href="../register">Supplier Register</a><a href="../login">Supplier login</a></nav>
 </div></header>
 
-<div class="wrap">
- <div class="crumb"><a href="../">Home</a> › Post RFQ</div>
- <div class="panel" style="max-width:640px;margin:0 auto">
-  <h2 style="font-size:20px;margin-bottom:4px">Request for Quotation</h2>
-  <p class="muted">Tell suppliers what you need — verified manufacturers respond with quotes, usually within 24h.</p>
+<div class="wrap" style="max-width:460px;margin:48px auto">
+ <div class="card" style="padding:28px">
+  <h1 style="margin-top:0">Supplier Login</h1>
   
   <form method="post" action="#">
-   <input type="hidden" name="product" value="0">
-   <label>Category</label>
-   <select name="category" class="f"><option value="0">General / other</option>
-    <option value="1">Electronics &amp; Components</option><option value="2">Furniture &amp; Fixtures</option><option value="3">Food &amp; Agriculture</option><option value="4">Textiles &amp; Garments</option><option value="5">Construction &amp; Materials</option><option value="6">Machinery &amp; Industrial</option><option value="7">Health &amp; Wellness</option><option value="8">Packaging &amp; Printing</option></select>
-   <label>Your name *</label><input class="f" name="name" required>
-   <label>Email *</label><input class="f" type="email" name="email" required>
-   <label>Phone</label><input class="f" name="phone">
-   <label>Company</label><input class="f" name="company">
-   <label>Quantity needed</label><input class="f" name="qty" placeholder="e.g. 500 pcs / monthly">
-   <label>Details</label><textarea class="f" name="message" rows="4" placeholder="Specs, materials, certifications, delivery target…"></textarea>
-   <button class="btn gold" style="margin-top:16px;width:100%">Send to suppliers</button>
+   <label>Email<br><input name="email" type="email" required style="width:100%;padding:10px;margin:6px 0 14px"></label>
+   <label>Password<br><input name="pw" type="password" required style="width:100%;padding:10px;margin:6px 0 14px"></label>
+   <button style="width:100%;padding:12px;background:#0a6ebd;color:#fff;border:0;border-radius:8px;font-size:16px">Log in</button>
   </form>
+  <p style="margin-top:18px;font-size:14px">No account yet? <a href="../register">Register as a supplier</a></p>
+  <p style="font-size:13px;color:#777">Demo account: demo@islatrade.ph / islatrade</p>
  </div>
 </div>
 

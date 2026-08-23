@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /islatrade/supplier-admin
+Disallow: /islatrade/logout
+Sitemap: https://mark-automation.github.io/islatrade/sitemap.xml
