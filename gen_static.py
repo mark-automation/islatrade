@@ -11,6 +11,7 @@ import urllib.request
 BASE = "http://127.0.0.1:8500"
 OUT = r"C:\Users\jorda\islatrade\site"
 PAGES_BASE = "https://mark-automation.github.io/islatrade"
+PAGES_ROOT = "/islatrade"  # site base path on GitHub Pages (project site)
 os.makedirs(OUT, exist_ok=True)
 
 
@@ -27,7 +28,11 @@ def save(rel, text):
 
 
 def rel_prefix(depth):
-    return "./" if depth == 0 else "../" * depth
+    # ABSOLUTE site-base prefix ("/islatrade/"). GitHub Pages serves
+    # extensionless URLs WITHOUT a trailing slash (/islatrade/products), so
+    # ../-style relative links resolve against the HOST ROOT and 404 en masse.
+    # Base-prefixed absolute paths are correct regardless of URL shape.
+    return PAGES_ROOT + "/"
 
 
 DEMO_NOTE = """
@@ -171,7 +176,7 @@ save("robots.txt",
      "Disallow: /islatrade/register\n"
      "Disallow: /islatrade/logout\n"
      f"Sitemap: {PAGES_BASE}/sitemap.xml\n")
-urls = ["", "/products/", "/suppliers/", "/rfq/"]
+urls = ["/", "/products/", "/suppliers/", "/rfq/"]
 for c in cats:
     urls.append(f"/products/cat-{c['slug']}/")
 for p in prods:
