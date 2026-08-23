@@ -278,6 +278,11 @@ def resp(request, template, status_code=200, **ctx):
         ctx.setdefault("me", current_supplier(request))
     except Exception:
         ctx.setdefault("me", None)
+    try:
+        import fx
+        ctx.setdefault("usdphp", fx.get_usdphp())
+    except Exception:
+        ctx.setdefault("usdphp", None)
     return tpl.TemplateResponse(request, template, ctx, status_code=status_code)
 
 
