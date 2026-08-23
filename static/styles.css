@@ -174,3 +174,110 @@ footer{margin-top:44px;background:var(--navy);color:#b9cdf2;padding:22px 0;font-
  .stats{gap:16px}.stats b{font-size:18px}.stats span{font-size:10.5px}
  .cattile{padding:13px 8px;font-size:13px}.cattile .ic{font-size:30px}
 }
+
+/* ================= SUPPLIER DASHBOARD ================= */
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.dash-id{display:flex;gap:14px;align-items:center}
+.dash-avatar{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#0050d8);color:#fff;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dash-head h1{font-size:22px;line-height:1.25;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dash-head .chip{font-size:10.5px;margin:0}
+.vchip{background:#e8f7ee;color:#0a7d33}
+.achip{background:linear-gradient(120deg,#fff8dd,#ffefb3);color:#8a6d00;border:1px solid #f2dc9b}
+.dash-head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dash-out{color:var(--mut);font-size:13px}
+.dash-out:hover{color:var(--navy);text-decoration:none}
+
+.dash-stats{margin-bottom:18px}
+.stat-tile{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block}
+.stat-tile b{display:block;font-size:22px;line-height:1.15;color:var(--ink)}
+.stat-tile span{display:block;font-size:11.5px;color:var(--mut);margin-top:3px}
+.stat-tile:hover{text-decoration:none;border-color:var(--navy);box-shadow:0 4px 14px rgba(0,56,168,.10)}
+.stat-tile.hot{border-color:#eecac6;background:#fdf6f5}
+.stat-tile.hot b{color:#c0392b}
+
+.dash-cols{grid-template-columns:1.4fr 1fr;align-items:start}
+.sec .count{background:#eef3fb;color:var(--navy);border-radius:10px;font-size:11.5px;font-weight:700;padding:1px 8px}
+.badge{background:#c0392b;color:#fff;border-radius:10px;font-size:11px;font-weight:700;padding:1px 8px}
+.empty{color:var(--mut);font-size:13.5px;padding:4px 2px}
+
+.btn.sm{padding:8px 16px;font-size:13px;border-radius:7px}
+.btn.danger{background:#c0392b}
+.ghost{background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:7px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer}
+.ghost:hover{border-color:var(--navy);color:var(--navy);text-decoration:none}
+
+/* --- RFQ cards --- */
+.rfq{border:1px solid var(--line);border-radius:9px;padding:12px 14px;margin-bottom:10px;background:#fff}
+.rfq:last-child{margin-bottom:0}
+.rfq-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:13.5px}
+.rfq-num{color:var(--mut);font-size:11.5px;font-weight:700;background:#f1f4f9;border-radius:5px;padding:1px 6px}
+.rfq-when{margin-left:auto;color:var(--mut);font-size:11px}
+.rfq-contact{font-size:12px;color:var(--mut);margin-top:4px}
+.newchip{background:#fdeceb;color:#c0392b}
+.okchip{background:#e8f7ee;color:#0a7d33}
+.rfq-msg{margin:9px 0 0;padding:8px 11px;border-left:3px solid var(--line);background:#f8fafd;border-radius:0 7px 7px 0;font-size:13px;color:#3c4553;line-height:1.45}
+
+.thread{display:grid;gap:6px;background:#f8fafd;border:1px solid var(--line);border-radius:9px;padding:8px;margin:9px 0}
+.bubble{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px}
+.bubble.me{background:#eef6ff;border-color:#d7e6fb}
+.bubble b{display:block;font-size:11px;color:var(--mut);margin-bottom:2px}
+.bubble p{margin:0;line-height:1.4}
+
+.replyrow{display:flex;gap:6px;margin-top:9px}
+.replyrow input{flex:1;min-width:0;padding:8px 11px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-family:inherit}
+.replyrow .btn{flex-shrink:0}
+
+.quote{margin-top:9px;border-top:1px dashed var(--line);padding-top:8px}
+.quote summary{cursor:pointer;color:var(--navy);font-size:12.5px;font-weight:600}
+.quoterow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:9px}
+.quoterow label{margin:0;font-size:11px;color:var(--mut)}
+.quoterow input{display:block;margin-top:3px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-family:inherit;width:110px}
+.quoterow label:nth-child(2) input{width:80px}
+.quoterow label:nth-child(3){flex:1;min-width:160px}
+.quoterow label:nth-child(3) input{width:100%}
+
+/* --- notifications --- */
+.notif-list{list-style:none;padding:0;margin:0;font-size:12.5px}
+.notif-list li{padding:8px 4px;border-bottom:1px solid var(--line);line-height:1.45}
+.notif-list li:last-child{border-bottom:0}
+.notif-list li.unread{background:#f2f7ff;border-radius:7px;padding-left:9px;padding-right:9px;font-weight:600}
+.notif-meta{color:var(--mut);font-weight:400;font-size:11px;margin-top:2px}
+.notif-meta a{color:var(--navy)}
+#notifs form{margin-top:12px}
+
+/* --- my products --- */
+.prodrow{display:flex;justify-content:space-between;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line)}
+.prodrow:last-child{border-bottom:0}
+.prod-name{font-weight:600;font-size:13.5px}
+.prod-info .meta{margin-top:2px}
+.prod-actions{display:flex;gap:8px;align-items:flex-start;flex-shrink:0}
+.prod-actions summary{cursor:pointer;color:var(--navy);font-size:12px;font-weight:600}
+.editform{margin-top:8px;background:#f7f9fc;border:1px solid var(--line);border-radius:8px;padding:10px;display:grid;gap:8px}
+.editform input.f,.editform textarea.f{font-size:13px;padding:8px 10px}
+
+/* --- post new product --- */
+.newprod{margin-top:16px}
+.newprod>summary{cursor:pointer;font-size:15px;font-weight:800;color:var(--ink)}
+.newprod form{margin-top:14px}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.frow.wide{grid-template-columns:2fr 1fr}
+
+/* --- dashboard responsive --- */
+@media(max-width:980px){
+ .dash-cols{grid-template-columns:1fr}
+}
+@media(max-width:720px){
+ .dash-head{flex-direction:column;align-items:flex-start}
+ .dash-head-actions{width:100%}
+ .dash-head-actions .btn{flex:1;text-align:center}
+ .replyrow{flex-direction:column}
+ .replyrow .btn{width:100%}
+ .quoterow{flex-direction:column;align-items:stretch}
+ .quoterow input,.quoterow label:nth-child(2) input,.quoterow label:nth-child(3) input{width:100%}
+ .prodrow{flex-direction:column}
+ .prod-actions{width:100%;justify-content:flex-end}
+}
+
+/* --- shared utilities referenced by templates (were missing) --- */
+.muted{color:var(--mut)}
+.row{margin:8px 0}
+.grp{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:12px 0 4px}

@@ -488,6 +488,7 @@ def supplier_admin(request: Request):
     me = current_supplier(request)
     if not me:
         return RedirectResponse("/login", status_code=302)
+    cats = q("SELECT * FROM categories ORDER BY id")
     my_products = q("SELECT * FROM products WHERE supplier_id=? ORDER BY id DESC", (me["id"],))
     inbox = q("""SELECT r.*, p.name pname FROM rfqs r
                  LEFT JOIN products p ON p.id=r.product_id
@@ -499,11 +500,14 @@ def supplier_admin(request: Request):
     if ids:
         marks = ",".join("?" * len(ids))
         msgs = q(f"SELECT * FROM messages WHERE rfq_id IN ({marks}) ORDER BY created", tuple(ids))
+        quotes = q(f"SELECT * FROM quotes WHERE rfq_id IN ({marks}) ORDER BY created", tuple(ids))
+    else:
+        quotes = []
     notifs = q("SELECT * FROM notifications WHERE supplier_id=? ORDER BY id DESC LIMIT 30", (me["id"],))
     unread = q("SELECT COUNT(*) n FROM notifications WHERE supplier_id=? AND read=0",
                (me["id"],), one=True)["n"]
     return resp(request, "admin.html", me=me, prods=my_products, inbox=inbox, msgs=msgs,
-                notifs=notifs, unread=unread)
+                notifs=notifs, unread=unread, cats=cats, quotes=quotes)
 
 
 @app.post("/supplier-admin/notifications/read")
