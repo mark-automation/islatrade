@@ -442,6 +442,8 @@ def register(request: Request, company: str = Form(""), email: str = Form(""),
     if not company or not email or len(pw) < 6:
         return resp(request, "register.html", 400, err="Company, email and a password of 6+ chars are required")
     email = email.lower().strip()
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        return resp(request, "register.html", 400, err="Enter a valid email address (e.g. you@company.com)")
     if q("SELECT id FROM suppliers WHERE email=?", (email,), one=True):
         return resp(request, "register.html", 400, err="That email is already registered")
     slug = re.sub(r"[^a-z0-9]+", "-", company.lower()).strip("-") + f"-{secrets.token_hex(3)}"

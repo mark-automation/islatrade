@@ -20,6 +20,13 @@ def test_register_rejects_duplicate_email(client):
     assert "already registered" in r.text.lower()
 
 
+def test_register_rejects_malformed_email(client):
+    for bad in ("not-an-email", "a@b", "spaces in@mail.com", "@nodomain.com"):
+        r = client.post("/register", data={"company": "Fmt", "email": bad, "pw": "secret7"})
+        assert r.status_code == 400, bad
+        assert "valid email" in r.text.lower()
+
+
 def test_register_success_creates_session_and_dashboard(client):
     email = unique_email("sup")
     r = client.post("/register", data={"company": "Test Goods Co", "email": email, "pw": "hunter22"},
