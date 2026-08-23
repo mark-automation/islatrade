@@ -40,7 +40,7 @@
    {% for r in inbox %}
     {% set qq = quotes|selectattr('rfq_id','equalto',r.id)|list %}
     <article class="rfq">
-     <header class="rfq-top">
+     <div class="rfq-top">
       <span class="rfq-num">#{{ r.id }}</span>
       <b>{{ r.name }}</b>{% if r.company %} · {{ r.company }}{% endif %}
       {% if qq %}
@@ -51,7 +51,7 @@
       <span class="chip">qty: {{ r.qty or "—" }}</span>
       {% if r.pname %}<span class="chip">re: {{ r.pname }}</span>{% endif %}
       <span class="rfq-when">{{ r.created|ago }}</span>
-     </header>
+     </div>
      <p class="rfq-contact">{{ r.email }}</p>
      {% if r.message %}<blockquote class="rfq-msg">{{ r.message }}</blockquote>{% endif %}
 
