@@ -3,3 +3,4 @@ __pycache__/
 islatrade.db
 islatrade.db-journal
 .env
+site/
