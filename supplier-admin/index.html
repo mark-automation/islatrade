@@ -17,214 +17,316 @@
   </nav>
 </div></header>
 
-<div class="wrap" style="margin:28px auto">
- <h1>Supplier Dashboard</h1>
- <p>Signed in as <b>Manila Micro Circuits Corp</b> · Quezon City, Metro Manila · <a href="#it-logout">Log out</a></p>
+<div class="wrap dash">
 
- <div class="card" style="padding:22px;margin:18px 0">
-  <h2 style="margin-top:0">🔔 Notifications
-   <span style="background:#c0392b;color:#fff;border-radius:12px;padding:1px 10px;font-size:13px">1 new</span></h2>
-  
-  <ul style="list-style:none;padding:0;margin:0;font-size:14px">
-   
-   <li style="padding:7px 4px;border-bottom:1px solid #eee;font-weight:600;background:#f4f8ff;border-radius:6px;">
-    🔔 New RFQ from Alice Buyer · <a href="../rfq/tracking" style="color:#0a6ebd">view</a>
-    <span style="color:#999;font-weight:400">17h ago</span></li>
-   
-  </ul>
-  <form method="post" action="#" style="margin-top:10px">
-   <button style="padding:7px 16px;background:#555;color:#fff;border:0;border-radius:6px;font-size:13px">Mark all read</button>
-  </form>
-  
+ <!-- identity band -->
+ <div class="panel dash-head">
+  <div class="dash-id">
+   <div class="dash-avatar">M</div>
+   <div>
+    <h1>Manila Micro Circuits Corp
+     <span class="chip vchip">✔ Verified</span>
+     <span class="chip achip">🛡 Trade Assured</span>
+    </h1>
+    <p class="meta">📍 Quezon City, Metro Manila · Supplier dashboard</p>
+   </div>
+  </div>
+  <div class="dash-head-actions">
+   <a class="btn ghost sm" href="../supplier/manila-micro-circuits-corp-1">Storefront</a>
+   <a class="btn sm" href="../rfq/tracking">Track RFQs</a>
+   <a class="dash-out" href="#it-logout">Log out</a>
+  </div>
  </div>
 
- <div class="card" style="padding:22px;margin:18px 0">
-  <h2 style="margin-top:0">📥 RFQ Inbox <span style="color:#888;font-size:14px">(2)</span></h2>
-  
-  
-   <div class="row" style="border-bottom:1px solid #eee;padding-bottom:10px;margin-bottom:10px">
-    <b>Alice Buyer</b> — qty: 200 pcs · RFQ #3
-    <div style="color:#666">alice@buyer.com</div>
-    <div style="max-width:480px;color:#444">Quote request batch 2</div>
-    
-    
-     <div style="background:#f2f7ff;border-radius:6px;padding:4px 10px;margin:3px 0;font-size:13px">
-      <b>You:</b> Hi Alice  yes we can do 200 units, samples ship this week.</div>
-    
-     <div style="background:#f2f7ff;border-radius:6px;padding:4px 10px;margin:3px 0;font-size:13px">
-      <b>Alice Buyer:</b> Great, send samples to Makati HQ</div>
-    
-    <form method="post" action="#" style="display:flex;gap:5px;margin-top:5px">
-     <input name="text" placeholder="reply to buyer…" required style="flex:1;padding:6px;border:1px solid #ddd;border-radius:4px">
-     <button class="btn" style="padding:6px 14px;font-size:12px;background:#0038a8">Reply</button>
-    </form>
-    <details style="margin-top:6px">
-     <summary style="cursor:pointer;color:#0a6ebd;font-size:12.5px">Send formal quote</summary>
-     <form method="post" action="#" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:6px">
-      ₱<input name="price" type="number" step="0.01" required placeholder="price" style="width:90px;padding:5px;border:1px solid #ddd;border-radius:4px">
-      lead<input name="lead_days" type="number" value="14" style="width:50px;padding:5px;border:1px solid #ddd;border-radius:4px">days
-      <input name="message" placeholder="terms" style="flex:1;min-width:110px;padding:5px;border:1px solid #ddd;border-radius:4px">
-      <button class="btn" style="padding:5px 12px;font-size:12px;background:#0038a8">Quote</button>
-     </form>
-    </details>
-   </div>
-  
-   <div class="row" style="border-bottom:1px solid #eee;padding-bottom:10px;margin-bottom:10px">
-    <b>Alice Buyer</b> — qty: 100 units · RFQ #2
-    <div style="color:#666">alice@buyer.com</div>
-    <div style="max-width:480px;color:#444">Need custom PCB prototypes</div>
-    
-    
-     <div style="background:#f2f7ff;border-radius:6px;padding:4px 10px;margin:3px 0;font-size:13px">
-      <b>Alice Buyer:</b> Confirming sample delivery date</div>
-    
-    <form method="post" action="#" style="display:flex;gap:5px;margin-top:5px">
-     <input name="text" placeholder="reply to buyer…" required style="flex:1;padding:6px;border:1px solid #ddd;border-radius:4px">
-     <button class="btn" style="padding:6px 14px;font-size:12px;background:#0038a8">Reply</button>
-    </form>
-    <details style="margin-top:6px">
-     <summary style="cursor:pointer;color:#0a6ebd;font-size:12.5px">Send formal quote</summary>
-     <form method="post" action="#" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:6px">
-      ₱<input name="price" type="number" step="0.01" required placeholder="price" style="width:90px;padding:5px;border:1px solid #ddd;border-radius:4px">
-      lead<input name="lead_days" type="number" value="14" style="width:50px;padding:5px;border:1px solid #ddd;border-radius:4px">days
-      <input name="message" placeholder="terms" style="flex:1;min-width:110px;padding:5px;border:1px solid #ddd;border-radius:4px">
-      <button class="btn" style="padding:5px 12px;font-size:12px;background:#0038a8">Quote</button>
-     </form>
-    </details>
-   </div>
-  
+ <!-- stats -->
+ <div class="grid g4 dash-stats">
+  <a class="stat-tile" href="#my-products"><b>4</b><span>📦 Products live</span></a>
+  <a class="stat-tile hot" href="#rfq-inbox"><b>2</b><span>📥 RFQ inbox</span></a>
+  <a class="stat-tile hot" href="#notifs"><b>1</b><span>🔔 Unread alerts</span></a>
+  <a class="stat-tile" href="../supplier/manila-micro-circuits-corp-1"><b>★ 4.8</b><span>97% response rate</span></a>
  </div>
 
- <div class="card" style="padding:22px;margin:18px 0">
-  <h2 style="margin-top:0">➕ Post a New Product</h2>
-  <form method="post" action="#">
-   <div style="display:flex;gap:12px;flex-wrap:wrap">
-    <label style="flex:2 1 240px">Product name<br><input name="name" required style="width:100%;padding:9px;margin:4px 0"></label>
-    <label style="flex:1 1 180px">Category<br>
-     <select name="category_id" style="width:100%;padding:9px;margin:4px 0">
-      <option value="0">— none —</option>
+ <div class="grid dash-cols">
+  <!-- main column: RFQ inbox -->
+  <section class="panel" id="rfq-inbox">
+   <h2 class="sec">📥 RFQ Inbox <span class="count">2</span></h2>
+   
+   
+    
+    <article class="rfq">
+     <header class="rfq-top">
+      <span class="rfq-num">#3</span>
+      <b>Alice Buyer</b>
       
-     </select></label>
-   </div>
-   <div style="display:flex;gap:12px;flex-wrap:wrap">
-    <label>Price min ₱<br><input name="price_min" type="number" step="0.01" style="width:110px;padding:9px;margin:4px 0"></label>
-    <label>Price max ₱<br><input name="price_max" type="number" step="0.01" style="width:110px;padding:9px;margin:4px 0"></label>
-    <label>Unit<br><input name="unit" value="per pc" style="width:120px;padding:9px;margin:4px 0"></label>
-    <label>MOQ<br><input name="moq" type="number" value="1" style="width:90px;padding:9px;margin:4px 0"></label>
-    <label>Lead days<br><input name="lead_days" type="number" value="14" style="width:90px;padding:9px;margin:4px 0"></label>
-   </div>
-   <label>Description<br><textarea name="descr" rows="3" style="width:100%;padding:9px;margin:4px 0"></textarea></label>
-   <label>Image URL <span style="color:#888;font-size:12px">(optional — category art used if blank)</span><br><input name="image_url" placeholder="/static/img/… or https://…" style="width:100%;padding:9px;margin:4px 0"></label>
-   <button style="padding:11px 26px;background:#0a6ebd;color:#fff;border:0;border-radius:8px;font-size:15px">Publish product</button>
-  </form>
+       <span class="chip newchip">Needs quote</span>
+      
+      <span class="chip">qty: 200 pcs</span>
+      
+      <span class="rfq-when">19h ago</span>
+     </header>
+     <p class="rfq-contact">alice@buyer.com</p>
+     <blockquote class="rfq-msg">Quote request batch 2</blockquote>
+
+     
+     
+      <div class="thread">
+       
+        <div class="bubble me">
+         <b>You</b>
+         <p>Hi Alice  yes we can do 200 units, samples ship this week.</p>
+        </div>
+       
+        <div class="bubble them">
+         <b>Alice Buyer</b>
+         <p>Great, send samples to Makati HQ</p>
+        </div>
+       
+      </div>
+     
+
+     <form class="replyrow" method="post" action="#">
+      <input name="text" placeholder="Reply to buyer…" required>
+      <button class="btn sm">Reply</button>
+     </form>
+
+     <details class="quote">
+      <summary>Send formal quote</summary>
+      <form class="quoterow" method="post" action="#">
+       <label>₱ price<input name="price" type="number" step="0.01" required placeholder="0.00" value=""></label>
+       <label>Lead days<input name="lead_days" type="number" value="14"></label>
+       <label>Terms / notes<input name="message" placeholder="e.g. FOB Manila, 50% deposit" value=""></label>
+       <button class="btn gold sm">Send quote</button>
+      </form>
+     </details>
+    </article>
+   
+    
+    <article class="rfq">
+     <header class="rfq-top">
+      <span class="rfq-num">#2</span>
+      <b>Alice Buyer</b>
+      
+       <span class="chip okchip">Quoted ₱15000 · 12d</span>
+      
+      <span class="chip">qty: 100 units</span>
+      <span class="chip">re: Virgin Coconut Oil (VCO) Drums</span>
+      <span class="rfq-when">19h ago</span>
+     </header>
+     <p class="rfq-contact">alice@buyer.com</p>
+     <blockquote class="rfq-msg">Need custom PCB prototypes</blockquote>
+
+     
+     
+      <div class="thread">
+       
+        <div class="bubble them">
+         <b>Alice Buyer</b>
+         <p>Confirming sample delivery date</p>
+        </div>
+       
+      </div>
+     
+
+     <form class="replyrow" method="post" action="#">
+      <input name="text" placeholder="Reply to buyer…" required>
+      <button class="btn sm">Reply</button>
+     </form>
+
+     <details class="quote">
+      <summary>Update formal quote</summary>
+      <form class="quoterow" method="post" action="#">
+       <label>₱ price<input name="price" type="number" step="0.01" required placeholder="0.00" value="15000"></label>
+       <label>Lead days<input name="lead_days" type="number" value="12"></label>
+       <label>Terms / notes<input name="message" placeholder="e.g. FOB Manila, 50% deposit" value="Includes testing   30-day warranty"></label>
+       <button class="btn gold sm">Update quote</button>
+      </form>
+     </details>
+    </article>
+   
+  </section>
+
+  <!-- side column -->
+  <aside class="panel" id="notifs">
+   <h2 class="sec">🔔 Notifications
+    <span class="badge">1 new</span>
+   </h2>
+   
+    <ul class="notif-list">
+     
+      <li class="unread">
+       <span>New RFQ from Alice Buyer</span>
+       <div class="notif-meta"><a href="../rfq/tracking">view</a> · 19h ago</div>
+      </li>
+     
+    </ul>
+    <form method="post" action="#">
+     <button class="btn ghost sm">Mark all read</button>
+    </form>
+   
+  </aside>
  </div>
 
- <div class="card" style="padding:22px;margin:18px 0">
-  <h2 style="margin-top:0">📦 My Products <span style="color:#888;font-size:14px">(4)</span></h2>
-  <table style="width:100%;border-collapse:collapse;font-size:14px">
-   
-   <tr style="border-bottom:1px solid #eee">
-    <td style="padding:8px 6px"><a href="../product/prototype-pcb-test-board-676ad7">Prototype PCB Test Board</a><br>
-     <span style="color:#666">₱200–₱900 per board · MOQ 25</span></td>
-    <td style="padding:8px 6px;text-align:right">
-     <details style="display:inline-block;text-align:left">
-      <summary style="cursor:pointer;color:#0a6ebd">Edit</summary>
-      <form method="post" action="#" style="margin-top:8px;min-width:280px;background:#f7f9fb;padding:10px;border-radius:8px">
-       <input name="name" value="Prototype PCB Test Board" required style="width:100%;padding:7px;margin:3px 0"><br>
-       ₱<input name="price_min" type="number" step="0.01" value="200.0" style="width:95px;padding:7px;margin:3px 0">
-       – ₱<input name="price_max" type="number" step="0.01" value="900.0" style="width:95px;padding:7px;margin:3px 0">
-       <input name="unit" value="per board" style="width:110px;padding:7px;margin:3px 0"><br>
-       MOQ <input name="moq" type="number" value="25" style="width:80px;padding:7px;margin:3px 0">
-       lead <input name="lead_days" type="number" value="10" style="width:70px;padding:7px;margin:3px 0"> days<br>
-       <textarea name="descr" rows="2" style="width:100%;padding:7px;margin:3px 0">Test listing via dashboard</textarea><br>
-       <input name="image_url" value="/static/img/p/prototype-pcb-test-board-676ad7.svg" placeholder="image URL (blank = keep)" style="width:100%;padding:7px;margin:3px 0"><br>
-       <button style="padding:7px 16px;background:#0a6ebd;color:#fff;border:0;border-radius:6px">Save</button>
-      </form>
-     </details>
-     <form method="post" action="#" style="display:inline"
-           onsubmit="return confirm('Delete Prototype PCB Test Board?')">
-      <button style="padding:7px 12px;background:#c0392b;color:#fff;border:0;border-radius:6px">Delete</button>
-     </form>
-    </td>
-   </tr>
-   
-   <tr style="border-bottom:1px solid #eee">
-    <td style="padding:8px 6px"><a href="../product/wire-harness-cable-assemblies-3">Wire Harness &amp; Cable Assemblies</a><br>
-     <span style="color:#666">₱40–₱350 per set · MOQ 200</span></td>
-    <td style="padding:8px 6px;text-align:right">
-     <details style="display:inline-block;text-align:left">
-      <summary style="cursor:pointer;color:#0a6ebd">Edit</summary>
-      <form method="post" action="#" style="margin-top:8px;min-width:280px;background:#f7f9fb;padding:10px;border-radius:8px">
-       <input name="name" value="Wire Harness &amp; Cable Assemblies" required style="width:100%;padding:7px;margin:3px 0"><br>
-       ₱<input name="price_min" type="number" step="0.01" value="40.0" style="width:95px;padding:7px;margin:3px 0">
-       – ₱<input name="price_max" type="number" step="0.01" value="350.0" style="width:95px;padding:7px;margin:3px 0">
-       <input name="unit" value="per set" style="width:110px;padding:7px;margin:3px 0"><br>
-       MOQ <input name="moq" type="number" value="200" style="width:80px;padding:7px;margin:3px 0">
-       lead <input name="lead_days" type="number" value="12" style="width:70px;padding:7px;margin:3px 0"> days<br>
-       <textarea name="descr" rows="2" style="width:100%;padding:7px;margin:3px 0">Wire Harness &amp; Cable Assemblies supplied by Manila Micro Circuits Corp (Metro Manila). Quality-inspected, export documentation available, OEM/ODM welcome. Lead time 12 days from confirmed order. Samples available on request.</textarea><br>
-       <input name="image_url" value="/static/img/p/wire-harness-cable-assemblies-3.svg" placeholder="image URL (blank = keep)" style="width:100%;padding:7px;margin:3px 0"><br>
-       <button style="padding:7px 16px;background:#0a6ebd;color:#fff;border:0;border-radius:6px">Save</button>
-      </form>
-     </details>
-     <form method="post" action="#" style="display:inline"
-           onsubmit="return confirm('Delete Wire Harness &amp; Cable Assemblies?')">
-      <button style="padding:7px 12px;background:#c0392b;color:#fff;border:0;border-radius:6px">Delete</button>
-     </form>
-    </td>
-   </tr>
-   
-   <tr style="border-bottom:1px solid #eee">
-    <td style="padding:8px 6px"><a href="../product/bluetooth-audio-modules-2">Bluetooth Audio Modules</a><br>
-     <span style="color:#666">₱95–₱480 per 10pcs · MOQ 100</span></td>
-    <td style="padding:8px 6px;text-align:right">
-     <details style="display:inline-block;text-align:left">
-      <summary style="cursor:pointer;color:#0a6ebd">Edit</summary>
-      <form method="post" action="#" style="margin-top:8px;min-width:280px;background:#f7f9fb;padding:10px;border-radius:8px">
-       <input name="name" value="Bluetooth Audio Modules" required style="width:100%;padding:7px;margin:3px 0"><br>
-       ₱<input name="price_min" type="number" step="0.01" value="95.0" style="width:95px;padding:7px;margin:3px 0">
-       – ₱<input name="price_max" type="number" step="0.01" value="480.0" style="width:95px;padding:7px;margin:3px 0">
-       <input name="unit" value="per 10pcs" style="width:110px;padding:7px;margin:3px 0"><br>
-       MOQ <input name="moq" type="number" value="100" style="width:80px;padding:7px;margin:3px 0">
-       lead <input name="lead_days" type="number" value="10" style="width:70px;padding:7px;margin:3px 0"> days<br>
-       <textarea name="descr" rows="2" style="width:100%;padding:7px;margin:3px 0">Bluetooth Audio Modules supplied by Manila Micro Circuits Corp (Metro Manila). Quality-inspected, export documentation available, OEM/ODM welcome. Lead time 10 days from confirmed order. Samples available on request.</textarea><br>
-       <input name="image_url" value="/static/img/p/bluetooth-audio-modules-2.svg" placeholder="image URL (blank = keep)" style="width:100%;padding:7px;margin:3px 0"><br>
-       <button style="padding:7px 16px;background:#0a6ebd;color:#fff;border:0;border-radius:6px">Save</button>
-      </form>
-     </details>
-     <form method="post" action="#" style="display:inline"
-           onsubmit="return confirm('Delete Bluetooth Audio Modules?')">
-      <button style="padding:7px 12px;background:#c0392b;color:#fff;border:0;border-radius:6px">Delete</button>
-     </form>
-    </td>
-   </tr>
-   
-   <tr style="border-bottom:1px solid #eee">
-    <td style="padding:8px 6px"><a href="../product/custom-pcb-assembly-smt-tht-1">Custom PCB Assembly (SMT/THT)</a><br>
-     <span style="color:#666">₱180–₱2400 per board · MOQ 50</span></td>
-    <td style="padding:8px 6px;text-align:right">
-     <details style="display:inline-block;text-align:left">
-      <summary style="cursor:pointer;color:#0a6ebd">Edit</summary>
-      <form method="post" action="#" style="margin-top:8px;min-width:280px;background:#f7f9fb;padding:10px;border-radius:8px">
-       <input name="name" value="Custom PCB Assembly (SMT/THT)" required style="width:100%;padding:7px;margin:3px 0"><br>
-       ₱<input name="price_min" type="number" step="0.01" value="180.0" style="width:95px;padding:7px;margin:3px 0">
-       – ₱<input name="price_max" type="number" step="0.01" value="2400.0" style="width:95px;padding:7px;margin:3px 0">
-       <input name="unit" value="per board" style="width:110px;padding:7px;margin:3px 0"><br>
-       MOQ <input name="moq" type="number" value="50" style="width:80px;padding:7px;margin:3px 0">
-       lead <input name="lead_days" type="number" value="14" style="width:70px;padding:7px;margin:3px 0"> days<br>
-       <textarea name="descr" rows="2" style="width:100%;padding:7px;margin:3px 0">Custom PCB Assembly (SMT/THT) supplied by Manila Micro Circuits Corp (Metro Manila). Quality-inspected, export documentation available, OEM/ODM welcome. Lead time 14 days from confirmed order. Samples available on request.</textarea><br>
-       <input name="image_url" value="/static/img/p/custom-pcb-assembly-smt-tht-1.svg" placeholder="image URL (blank = keep)" style="width:100%;padding:7px;margin:3px 0"><br>
-       <button style="padding:7px 16px;background:#0a6ebd;color:#fff;border:0;border-radius:6px">Save</button>
-      </form>
-     </details>
-     <form method="post" action="#" style="display:inline"
-           onsubmit="return confirm('Delete Custom PCB Assembly (SMT/THT)?')">
-      <button style="padding:7px 12px;background:#c0392b;color:#fff;border:0;border-radius:6px">Delete</button>
-     </form>
-    </td>
-   </tr>
-   
-  </table>
- </div>
+ <!-- my products -->
+ <section class="panel" id="my-products">
+  <h2 class="sec">📦 My Products <span class="count">4</span></h2>
+  
+   <div class="prodlist">
+    
+     <div class="prodrow">
+      <div class="prod-info">
+       <a class="prod-name" href="../product/prototype-pcb-test-board-676ad7">Prototype PCB Test Board</a>
+       <p class="meta">₱200–₱900 per board · MOQ 25 · lead 10d</p>
+      </div>
+      <div class="prod-actions">
+       <details>
+        <summary>Edit</summary>
+        <form class="editform" method="post" action="#">
+         <input class="f" name="name" value="Prototype PCB Test Board" required>
+         <div class="frow">
+          <label>₱ min<input class="f" name="price_min" type="number" step="0.01" value="200.0"></label>
+          <label>₱ max<input class="f" name="price_max" type="number" step="0.01" value="900.0"></label>
+          <label>Unit<input class="f" name="unit" value="per board"></label>
+         </div>
+         <div class="frow">
+          <label>MOQ<input class="f" name="moq" type="number" value="25"></label>
+          <label>Lead days<input class="f" name="lead_days" type="number" value="10"></label>
+         </div>
+         <textarea class="f" name="descr" rows="2">Test listing via dashboard</textarea>
+         <input class="f" name="image_url" value="/static/img/p/prototype-pcb-test-board-676ad7.svg" placeholder="image URL (blank = keep)">
+         <button class="btn sm">Save changes</button>
+        </form>
+       </details>
+       <form method="post" action="#"
+             onsubmit="return confirm('Delete Prototype PCB Test Board?')">
+        <button class="btn danger sm">Delete</button>
+       </form>
+      </div>
+     </div>
+    
+     <div class="prodrow">
+      <div class="prod-info">
+       <a class="prod-name" href="../product/wire-harness-cable-assemblies-3">Wire Harness &amp; Cable Assemblies</a>
+       <p class="meta">₱40–₱350 per set · MOQ 200 · lead 12d</p>
+      </div>
+      <div class="prod-actions">
+       <details>
+        <summary>Edit</summary>
+        <form class="editform" method="post" action="#">
+         <input class="f" name="name" value="Wire Harness &amp; Cable Assemblies" required>
+         <div class="frow">
+          <label>₱ min<input class="f" name="price_min" type="number" step="0.01" value="40.0"></label>
+          <label>₱ max<input class="f" name="price_max" type="number" step="0.01" value="350.0"></label>
+          <label>Unit<input class="f" name="unit" value="per set"></label>
+         </div>
+         <div class="frow">
+          <label>MOQ<input class="f" name="moq" type="number" value="200"></label>
+          <label>Lead days<input class="f" name="lead_days" type="number" value="12"></label>
+         </div>
+         <textarea class="f" name="descr" rows="2">Wire Harness &amp; Cable Assemblies supplied by Manila Micro Circuits Corp (Metro Manila). Quality-inspected, export documentation available, OEM/ODM welcome. Lead time 12 days from confirmed order. Samples available on request.</textarea>
+         <input class="f" name="image_url" value="/static/img/p/wire-harness-cable-assemblies-3.svg" placeholder="image URL (blank = keep)">
+         <button class="btn sm">Save changes</button>
+        </form>
+       </details>
+       <form method="post" action="#"
+             onsubmit="return confirm('Delete Wire Harness &amp; Cable Assemblies?')">
+        <button class="btn danger sm">Delete</button>
+       </form>
+      </div>
+     </div>
+    
+     <div class="prodrow">
+      <div class="prod-info">
+       <a class="prod-name" href="../product/bluetooth-audio-modules-2">Bluetooth Audio Modules</a>
+       <p class="meta">₱95–₱480 per 10pcs · MOQ 100 · lead 10d</p>
+      </div>
+      <div class="prod-actions">
+       <details>
+        <summary>Edit</summary>
+        <form class="editform" method="post" action="#">
+         <input class="f" name="name" value="Bluetooth Audio Modules" required>
+         <div class="frow">
+          <label>₱ min<input class="f" name="price_min" type="number" step="0.01" value="95.0"></label>
+          <label>₱ max<input class="f" name="price_max" type="number" step="0.01" value="480.0"></label>
+          <label>Unit<input class="f" name="unit" value="per 10pcs"></label>
+         </div>
+         <div class="frow">
+          <label>MOQ<input class="f" name="moq" type="number" value="100"></label>
+          <label>Lead days<input class="f" name="lead_days" type="number" value="10"></label>
+         </div>
+         <textarea class="f" name="descr" rows="2">Bluetooth Audio Modules supplied by Manila Micro Circuits Corp (Metro Manila). Quality-inspected, export documentation available, OEM/ODM welcome. Lead time 10 days from confirmed order. Samples available on request.</textarea>
+         <input class="f" name="image_url" value="/static/img/p/bluetooth-audio-modules-2.svg" placeholder="image URL (blank = keep)">
+         <button class="btn sm">Save changes</button>
+        </form>
+       </details>
+       <form method="post" action="#"
+             onsubmit="return confirm('Delete Bluetooth Audio Modules?')">
+        <button class="btn danger sm">Delete</button>
+       </form>
+      </div>
+     </div>
+    
+     <div class="prodrow">
+      <div class="prod-info">
+       <a class="prod-name" href="../product/custom-pcb-assembly-smt-tht-1">Custom PCB Assembly (SMT/THT)</a>
+       <p class="meta">₱180–₱2400 per board · MOQ 50 · lead 14d</p>
+      </div>
+      <div class="prod-actions">
+       <details>
+        <summary>Edit</summary>
+        <form class="editform" method="post" action="#">
+         <input class="f" name="name" value="Custom PCB Assembly (SMT/THT)" required>
+         <div class="frow">
+          <label>₱ min<input class="f" name="price_min" type="number" step="0.01" value="180.0"></label>
+          <label>₱ max<input class="f" name="price_max" type="number" step="0.01" value="2400.0"></label>
+          <label>Unit<input class="f" name="unit" value="per board"></label>
+         </div>
+         <div class="frow">
+          <label>MOQ<input class="f" name="moq" type="number" value="50"></label>
+          <label>Lead days<input class="f" name="lead_days" type="number" value="14"></label>
+         </div>
+         <textarea class="f" name="descr" rows="2">Custom PCB Assembly (SMT/THT) supplied by Manila Micro Circuits Corp (Metro Manila). Quality-inspected, export documentation available, OEM/ODM welcome. Lead time 14 days from confirmed order. Samples available on request.</textarea>
+         <input class="f" name="image_url" value="/static/img/p/custom-pcb-assembly-smt-tht-1.svg" placeholder="image URL (blank = keep)">
+         <button class="btn sm">Save changes</button>
+        </form>
+       </details>
+       <form method="post" action="#"
+             onsubmit="return confirm('Delete Custom PCB Assembly (SMT/THT)?')">
+        <button class="btn danger sm">Delete</button>
+       </form>
+      </div>
+     </div>
+    
+   </div>
+  
+ </section>
+
+ <!-- post new product -->
+ <details class="panel newprod" >
+  <summary>➕ Post a New Product</summary>
+  <form method="post" action="#">
+   <div class="frow wide">
+    <label class="grow">Product name<input class="f" name="name" required placeholder="e.g. Coconut Shell Bowls, hand-polished"></label>
+    <label>Category
+     <select class="f" name="category_id">
+      <option value="0">— none —</option>
+      <option value="1">🔌 Electronics &amp; Components</option><option value="2">🪑 Furniture &amp; Fixtures</option><option value="3">🥥 Food &amp; Agriculture</option><option value="4">🧵 Textiles &amp; Garments</option><option value="5">🏗️ Construction &amp; Materials</option><option value="6">⚙️ Machinery &amp; Industrial</option><option value="7">💊 Health &amp; Wellness</option><option value="8">📦 Packaging &amp; Printing</option>
+     </select>
+    </label>
+   </div>
+   <div class="frow">
+    <label>Price min ₱<input class="f" name="price_min" type="number" step="0.01"></label>
+    <label>Price max ₱<input class="f" name="price_max" type="number" step="0.01"></label>
+    <label>Unit<input class="f" name="unit" value="per pc"></label>
+    <label>MOQ<input class="f" name="moq" type="number" value="1"></label>
+    <label>Lead days<input class="f" name="lead_days" type="number" value="14"></label>
+   </div>
+   <label>Description<textarea class="f" name="descr" rows="3" placeholder="Materials, finishes, customization, packaging…"></textarea></label>
+   <label>Image URL <small class="meta">(optional — category art used if blank)</small>
+    <input class="f" name="image_url" placeholder="/static/img/… or https://…"></label>
+   <button class="btn gold">Publish product</button>
+  </form>
+ </details>
+
 </div>
 
 <footer><div class="wrap">IslaTrade — The Philippines' B2B Marketplace · Connect with verified Filipino suppliers across 8 industries<br>
