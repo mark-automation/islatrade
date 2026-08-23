@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap">
+ <h2 class="sec">🛠 Admin panel — {{ me.email }}</h2>
+ <div class="grid g4" style="margin-bottom:20px">
+  {% for label, val in [('SUPPLIERS', stats.suppliers), ('PRODUCTS', stats.products), ('RFQS', stats.rfqs), ('QUOTES', stats.quotes), ('MESSAGES', stats.msgs), ('REVIEWS', stats.reviews)] %}
+   <div class="card" style="padding:12px;text-align:center"><b style="font-size:22px">{{ val }}</b><div class="meta">{{ label }}</div></div>
+  {% endfor %}
+ </div>
+ <div class="grid" style="grid-template-columns:1.3fr 1fr;align-items:start">
+  <div class="panel">
+   <h3 style="margin-bottom:10px">📥 All RFQs ({{ all_rfqs|length }})</h3>
+   {% for r in all_rfqs %}
+    <div class="row" style="border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px">
+     <b>#{{ r.id }} {{ r.name }}</b>{% if r.company %} · {{ r.company }}{% endif %} — {{ r.qty or '—' }}
+     <span class="chip">{{ r.nq }} quote{{ 's' if r.nq != 1 }}</span>
+     {% if r.pname %}<span class="chip">{{ r.pname }}</span>{% endif %}
+     <div class="muted">{{ r.email }} · {{ r.message[:90] }}</div>
+    </div>
+   {% else %}<p class="muted">none yet</p>{% endfor %}
+  </div>
+  <div class="panel">
+   <h3 style="margin-bottom:10px">🏭 Suppliers ({{ all_suppliers|length }})</h3>
+   {% for s in all_suppliers %}
+    <div class="row" style="border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:4px">
+     <a href="/supplier/{{ s.slug }}">{{ s.name }}</a> — ★{{ s.rating }} · {{ s.np }} products
+     <span class="chip">{{ s.region }}</span>
+    </div>
+   {% endfor %}
+  </div>
+ </div>
+</div>
+{% endblock %}

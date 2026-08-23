@@ -11,12 +11,14 @@ import uuid
 from pathlib import Path
 
 from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 BASE = Path(__file__).parent
-DB = BASE / "islatrade.db"
+# ISLATRADE_DB lets the test suite redirect all reads/writes to a scratch DB
+# (set by tests/conftest.py before import). Unset in prod -> live islatrade.db.
+DB = Path(os.environ.get("ISLATRADE_DB") or BASE / "islatrade.db")
 
 app = FastAPI(title="IslaTrade")
 app.mount("/static", StaticFiles(directory=str(BASE / "static")), name="static")
@@ -69,6 +71,7 @@ CREATE TABLE IF NOT EXISTS reviews(
 MIGRATIONS = [
     ("suppliers", "ALTER TABLE suppliers ADD COLUMN email TEXT"),
     ("suppliers", "ALTER TABLE suppliers ADD COLUMN pw_hash TEXT"),
+    ("suppliers", "ALTER TABLE suppliers ADD COLUMN is_admin INTEGER DEFAULT 0"),
     ("products", "ALTER TABLE products ADD COLUMN image_url TEXT"),
 ]
 
@@ -91,6 +94,7 @@ def init_db():
 
 
 import hashlib
+import hmac
 import secrets
 import time as _t
 
@@ -103,15 +107,15 @@ def current_supplier(request: Request):
     tok = request.cookies.get("it_sess")
     if not tok:
         return None
-    return q("SELECT s.* FROM sessions x JOIN suppliers s ON s.id=x.supplier_id WHERE x.token=?",
-             (tok,), one=True)
+    return q("SELECT s.* FROM sessions x JOIN suppliers s ON s.id=x.supplier_id WHERE x.token=? AND x.created>?",
+             (tok, _t.time() - 30 * 86400), one=True)
 
 
 def login_supplier(email: str, pw: str):
     s = q("SELECT * FROM suppliers WHERE email=?", (email.lower().strip(),), one=True)
     if not s or not s["pw_hash"]:
         return None, None
-    if hash_pw(pw) != s["pw_hash"]:
+    if not hmac.compare_digest(hash_pw(pw), s["pw_hash"]):
         return None, None
     tok = secrets.token_hex(16)
     with db() as con:
@@ -210,9 +214,10 @@ def seed():
                     f"Lead time {lead} days from confirmed order. Samples available on request.")
             con.execute(
                 "INSERT INTO products(supplier_id,category_id,name,slug,descr,price_min,price_max,"
-                "unit,moq,lead_days,rating,orders,featured) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "unit,moq,lead_days,rating,orders,featured,image_url) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (sup["id"], catrow["id"], name, slug, desc, pmin, pmax, unit, moq, lead,
-                 round(4.3 + (j % 7) * 0.1, 1), 40 + (j * 37) % 900, feat))
+                 round(4.3 + (j % 7) * 0.1, 1), 40 + (j * 37) % 900, feat,
+                 f"/static/img/cat-{cat}.svg"))
 
 
 import re  # noqa: E402  (used by seed)
@@ -230,6 +235,21 @@ def ensure_demo():
 
 
 ensure_demo()
+
+
+def ensure_site_admin():
+    with db() as con:
+        has = con.execute("SELECT id FROM suppliers WHERE email=?", ("admin@islatrade.ph",)).fetchone()
+        if not has:
+            con.execute(
+                "INSERT INTO suppliers(name,slug,region,city,industry,about,verified,rating,years,"
+                "response_rate,email,pw_hash,is_admin) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,1)",
+                ("IslaTrade Admin", "isla-admin", "Metro Manila", "Makati", "Platform",
+                 "Platform operator account (hidden from directory).", 0, 5.0, 0, 100,
+                 "admin@islatrade.ph", hash_pw("admin123")))
+
+
+ensure_site_admin()
 
 
 # ---------- helpers ----------
@@ -270,8 +290,9 @@ def home(request: Request):
                     JOIN categories c ON c.id=p.category_id WHERE p.featured=1 LIMIT 8""")
     top = q("""SELECT s.*, COUNT(p.id) np FROM suppliers s
                LEFT JOIN products p ON p.supplier_id=s.id
+               WHERE COALESCE(s.is_admin,0)=0
                GROUP BY s.id ORDER BY s.rating DESC LIMIT 4""")
-    stats = {"suppliers": q("SELECT COUNT(*) n FROM suppliers", one=True)["n"],
+    stats = {"suppliers": q("SELECT COUNT(*) n FROM suppliers WHERE COALESCE(is_admin,0)=0", one=True)["n"],
              "products": q("SELECT COUNT(*) n FROM products", one=True)["n"],
              "regions": q("SELECT COUNT(DISTINCT region) n FROM suppliers", one=True)["n"]}
     return resp(request, "index.html", cats=cats, featured=featured, top=top, stats=stats)
@@ -308,25 +329,43 @@ def product(request: Request, slug: str):
     if not p:
         return resp(request, "404.html", 404)
     related = q("""SELECT p.*, s.name sname FROM products p JOIN suppliers s ON s.id=p.supplier_id
-                   WHERE c_id IS NULL AND p.category_id=? AND p.id!=? LIMIT 4""",
-                (p["category_id"], p["id"])) if False else q(
-        """SELECT p.*, s.name sname FROM products p JOIN suppliers s ON s.id=p.supplier_id
-           WHERE p.category_id=? AND p.id!=? LIMIT 4""", (p["category_id"], p["id"]))
-    return resp(request, "product.html", p=p, related=related)
+                   WHERE p.category_id=? AND p.id!=? LIMIT 4""", (p["category_id"], p["id"]))
+    reviews = q("""SELECT * FROM reviews WHERE product_id=? ORDER BY created DESC LIMIT 20""",
+                (p["id"],))
+    ravg = q("SELECT AVG(rating) a, COUNT(*) n FROM reviews WHERE product_id=?",
+             (p["id"],), one=True)
+    assured = bool(p["sverified"] and p["response_rate"] >= 88 and p["years"] >= 5)
+    return resp(request, "product.html", p=p, related=related, reviews=reviews,
+                ravg=ravg["a"], rcount=ravg["n"], assured=assured)
+
+
+@app.post("/product/{slug}/review")
+def add_review(request: Request, slug: str, author: str = Form(""),
+               email: str = Form(""), rating: int = Form(5), text: str = Form("")):
+    p = q("SELECT id FROM products WHERE slug=?", (slug,), one=True)
+    if not p or not author or not text:
+        return RedirectResponse(f"/product/{slug}", status_code=302)
+    with db() as con:
+        con.execute("INSERT INTO reviews(product_id,author,email,rating,text,created)"
+                    " VALUES(?,?,?,?,?,?)",
+                    (p["id"], author[:60], email[:80], max(1, min(5, rating)), text[:600],
+                     time.time()))
+    return RedirectResponse(f"/product/{slug}#reviews", status_code=302)
 
 
 @app.get("/suppliers", response_class=HTMLResponse)
 def suppliers(request: Request):
     rows = q("""SELECT s.*, COUNT(p.id) np FROM suppliers s
-                LEFT JOIN products p ON p.supplier_id=s.id
-                GROUP BY s.id ORDER BY s.verified DESC, s.rating DESC""")
+                 LEFT JOIN products p ON p.supplier_id=s.id
+                 WHERE COALESCE(s.is_admin,0)=0
+                 GROUP BY s.id ORDER BY s.verified DESC, s.rating DESC""")
     return resp(request, "suppliers.html", rows=rows)
 
 
 @app.get("/supplier/{slug}", response_class=HTMLResponse)
 def supplier(request: Request, slug: str):
     s = q("SELECT * FROM suppliers WHERE slug=?", (slug,), one=True)
-    if not s:
+    if not s or s["is_admin"]:
         return resp(request, "404.html", 404)
     prods = q("SELECT * FROM products WHERE supplier_id=? ORDER BY featured DESC", (s["id"],))
     return resp(request, "supplier.html", s=s, prods=prods)
@@ -344,6 +383,8 @@ def rfq_form(request: Request, product: int = 0):
 def rfq_post(request: Request, name: str = Form(""), email: str = Form(""),
              phone: str = Form(""), company: str = Form(""), qty: str = Form(""),
              message: str = Form(""), product: int = Form(0), category: int = Form(0)):
+    if not rate_ok(request.client.host if request.client else "anon"):
+        return HTMLResponse("Slow down — try again in a minute.", status_code=429)
     if not name or not email:
         return RedirectResponse("/rfq?err=1", status_code=302)
     pname = None
@@ -391,6 +432,8 @@ def register_form(request: Request):
 @app.post("/register")
 def register(request: Request, company: str = Form(""), email: str = Form(""),
              pw: str = Form(""), region: str = Form("Metro Manila"), city: str = Form("")):
+    if not rate_ok(request.client.host if request.client else "anon"):
+        return HTMLResponse("Slow down — try again in a minute.", status_code=429)
     if not company or not email or len(pw) < 6:
         return resp(request, "register.html", 400, err="Company, email and a password of 6+ chars are required")
     email = email.lower().strip()
@@ -406,22 +449,28 @@ def register(request: Request, company: str = Form(""), email: str = Form(""),
         tok = secrets.token_hex(16)
         con.execute("INSERT INTO sessions(token,supplier_id,created) VALUES(?,?,?)", (tok, sid, _t.time()))
     r = RedirectResponse("/supplier-admin", status_code=302)
-    r.set_cookie("it_sess", tok, httponly=True, samesite="lax")
+    r.set_cookie("it_sess", tok, httponly=True, samesite="lax", secure=bool(os.environ.get("RENDER")))
     return r
 
 
 @app.post("/login")
 def login(request: Request, email: str = Form(""), pw: str = Form("")):
+    if not rate_ok(request.client.host if request.client else "anon"):
+        return HTMLResponse("Slow down — try again in a minute.", status_code=429)
     s, tok = login_supplier(email, pw)
     if not s:
         return resp(request, "login.html", 401, err="Invalid email or password")
     r = RedirectResponse("/supplier-admin", status_code=302)
-    r.set_cookie("it_sess", tok, httponly=True, samesite="lax")
+    r.set_cookie("it_sess", tok, httponly=True, samesite="lax", secure=bool(os.environ.get("RENDER")))
     return r
 
 
 @app.get("/logout")
-def logout():
+def logout(request: Request):
+    tok = request.cookies.get("it_sess")
+    if tok:
+        with db() as con:
+            con.execute("DELETE FROM sessions WHERE token=?", (tok,))
     r = RedirectResponse("/", status_code=302)
     r.delete_cookie("it_sess")
     return r
@@ -524,7 +573,7 @@ def post_quote(request: Request, rfq_id: int, price: float = Form(0),
 
 @app.get("/rfq/tracking", response_class=HTMLResponse)
 def rfq_tracking(request: Request, email: str = ""):
-    rfqs, quotes = [], []
+    rfqs, quotes, msgs = [], [], []
     if email:
         em = email.lower().strip()
         rfqs = q("SELECT * FROM rfqs WHERE LOWER(email)=? ORDER BY created DESC", (em,))
@@ -534,7 +583,10 @@ def rfq_tracking(request: Request, email: str = ""):
             quotes = q(f"SELECT q.*, s.name sname FROM quotes q "
                        f"JOIN suppliers s ON s.id=q.supplier_id WHERE q.rfq_id IN ({marks})",
                        tuple(ids))
-    msgs = q(f"SELECT * FROM messages WHERE LOWER(email)=? ORDER BY created", (email.lower().strip(),)) if email else []
+            # thread = buyer's own messages PLUS supplier replies on the buyer's RFQs
+            # (supplier rows carry supplier_id, not email -> must match by rfq_id)
+            msgs = q(f"SELECT * FROM messages WHERE LOWER(email)=? OR rfq_id IN ({marks}) "
+                     f"ORDER BY created", (em, *ids))
     return resp(request, "rfq_track.html", email=email, rfqs=rfqs, quotes=quotes, msgs=msgs)
 
 
@@ -559,6 +611,32 @@ def supplier_message(request: Request, rfq_id: int, text: str = Form("")):
     return RedirectResponse("/supplier-admin", status_code=302)
 
 
+@app.get("/admin-panel", response_class=HTMLResponse)
+def admin_panel(request: Request):
+    me = current_supplier(request)
+    if not me or not me["is_admin"]:
+        return RedirectResponse("/login", status_code=302)
+    stats = {
+        "suppliers": q("SELECT COUNT(*) n FROM suppliers WHERE COALESCE(is_admin,0)=0", one=True)["n"],
+        "products": q("SELECT COUNT(*) n FROM products", one=True)["n"],
+        "rfqs": q("SELECT COUNT(*) n FROM rfqs", one=True)["n"],
+        "quotes": q("SELECT COUNT(*) n FROM quotes", one=True)["n"],
+        "msgs": q("SELECT COUNT(*) n FROM messages", one=True)["n"],
+        "reviews": q("SELECT COUNT(*) n FROM reviews", one=True)["n"],
+    }
+    all_rfqs = q("""SELECT r.*, p.name pname, s.name sname, 
+                    (SELECT COUNT(*) FROM quotes qq WHERE qq.rfq_id=r.id) nq
+                    FROM rfqs r LEFT JOIN products p ON p.id=r.product_id
+                    LEFT JOIN suppliers s ON s.id=p.supplier_id
+                    ORDER BY r.created DESC LIMIT 100""")
+    all_suppliers = q("""SELECT s.*, COUNT(p.id) np FROM suppliers s
+                         LEFT JOIN products p ON p.supplier_id=s.id
+                         WHERE COALESCE(s.is_admin,0)=0
+                         GROUP BY s.id ORDER BY s.rating DESC""")
+    return resp(request, "admin_panel.html", me=me, stats=stats,
+                all_rfqs=all_rfqs, all_suppliers=all_suppliers)
+
+
 @app.get("/api/products")
 def api_products(q_: str = "", cat: str = "", limit: int = 50):
     sql = """SELECT p.id,p.name,p.slug,p.price_min,p.price_max,p.unit,p.moq,c.slug cat,
@@ -577,13 +655,59 @@ def api_products(q_: str = "", cat: str = "", limit: int = 50):
 
 
 @app.get("/api/rfqs")
-def api_rfqs():
+def api_rfqs(request: Request):
+    me = current_supplier(request)
+    if not me or not me["is_admin"]:
+        return JSONResponse({"error": "admin session required"}, status_code=401)
     return [dict(r) for r in q("SELECT * FROM rfqs ORDER BY created DESC LIMIT 100")]
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", "8500")))
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", "8500")),
+                proxy_headers=True, forwarded_allow_ips=os.environ.get("IT_TRUST_PROXY", "*"))
+
+
+# ---------- light rate limit (POST endpoints) ----------
+_RL: dict = {}
+RL_LIMIT = int(os.environ.get("ISLATRADE_RL_LIMIT", "10"))
+RL_WINDOW = 60
+
+
+def rate_ok(ip: str) -> bool:
+    now = time.time()
+    hits = [t for t in _RL.get(ip, []) if now - t < RL_WINDOW]
+    if len(hits) >= RL_LIMIT:
+        _RL[ip] = hits
+        return False
+    hits.append(now)
+    _RL[ip] = hits
+    return True
+
+
+@app.get("/robots.txt")
+def robots():
+    return HTMLResponse(
+        "User-agent: *\n"
+        "Disallow: /supplier-admin\n"
+        "Disallow: /login\n"
+        "Disallow: /register\n"
+        "Disallow: /logout\n"
+        "Sitemap: https://islatrade.ph/sitemap.xml"
+    )
+
+
+@app.get("/sitemap.xml")
+def sitemap():
+    base = "https://islatrade.ph"
+    urls = ["", "/products", "/suppliers", "/rfq"]
+    for c in q("SELECT slug FROM categories"):
+        urls.append(f"/products?cat={c['slug']}")
+    for p in q("SELECT slug FROM products"):
+        urls.append(f"/product/{p['slug']}")
+    body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + \
+        "".join(f"<url><loc>{base}{u}</loc></url>" for u in urls) + "</urlset>"
+    return HTMLResponse(body, media_type="application/xml")
 
 
 @app.get("/health")

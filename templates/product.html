@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block title %}{{ p.name }} — IslaTrade{% endblock %}
+{% block meta %}<meta name="description" content="{{ p.name }} — source this product from verified Filipino suppliers on IslaTrade, the Philippines' B2B marketplace.">
+<meta property="og:type" content="product"><meta property="og:title" content="{{ p.name }}">
+<meta property="og:description" content="Source {{ p.name }} on IslaTrade — post an RFQ free and compare supplier quotes.">{% if p.image_url %}<meta property="og:image" content="{{ p.image_url }}">{% endif %}{% endblock %}
 {% block content %}
 <div class="wrap">
  <div class="crumb"><a href="/">Home</a> › <a href="/products">Products</a> › {{ p.name }}</div>
@@ -11,7 +14,8 @@
   <div>
    <h1 style="font-size:22px;margin-bottom:8px">{{ p.name }}</h1>
    <div class="rating" style="font-size:14px">★ {{ p.rating }} · {{ p.orders }} orders ·
-    {% if p.sverified %}<span class="verified">✔ Verified supplier</span>{% endif %}</div>
+    {% if p.sverified %}<span class="verified">✔ Verified supplier</span>{% endif %}
+    {% if assured %}<span class="verified" style="color:#0a6ebd">🛡 TRADE ASSURED</span>{% endif %}</div>
    <div class="price" style="font-size:26px;margin-top:12px">₱{{ '%.0f'|format(p.price_min) }}–₱{{ '%.0f'|format(p.price_max) }}
     <small style="color:var(--mut);font-size:13px">/ {{ p.unit }}</small></div>
    <table class="specs">
@@ -24,6 +28,31 @@
    <a class="btn gold" href="/rfq?product={{ p.id }}">Contact supplier — get quote</a>
    <a class="btn" href="/rfq" style="margin-left:8px;background:#fff;color:var(--navy);border:1px solid var(--line)">Post general RFQ</a>
    <p style="margin-top:16px;font-size:14px;line-height:1.6;color:#3c4657">{{ p.descr }}</p>
+  </div>
+ </div>
+ <h2 class="sec" id="reviews">Reviews {% if rcount %}<span class="rating" style="font-size:13px;margin-left:6px">★ {{ '%.1f'|format(ravg) }} · {{ rcount }} review{{ 's' if rcount != 1 }}</span>{% endif %}</h2>
+ <div class="grid" style="grid-template-columns:1.2fr 1fr;align-items:start">
+  <div class="panel">
+   {% if reviews %}
+    {% for r in reviews %}
+     <div class="row" style="border-bottom:1px solid var(--line);padding:8px 4px">
+      <span class="rating">{% for i in range(r.rating) %}★{% endfor %}{% for i in range(5 - r.rating) %}☆{% endfor %}</span>
+      <b style="margin-left:6px">{{ r.author }}</b>
+      <div style="color:#3c4657;margin-top:2px">{{ r.text }}</div>
+     </div>
+    {% endfor %}
+   {% else %}<p class="muted">No reviews yet — be the first after your order.</p>{% endif %}
+  </div>
+  <div class="panel">
+   <b style="font-size:13.5px">Leave a review</b>
+   <form method="post" action="/product/{{ p.slug }}/review">
+    <label>Your name *</label><input class="f" name="author" required>
+    <label>Email (private) *</label><input class="f" type="email" name="email" required>
+    <label>Rating</label>
+    <select class="f" name="rating"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
+    <label>Review *</label><textarea class="f" name="text" rows="3" required></textarea>
+    <button class="btn" style="margin-top:12px;width:100%">Submit review</button>
+   </form>
   </div>
  </div>
  {% if related %}<h2 class="sec">Related products</h2>
