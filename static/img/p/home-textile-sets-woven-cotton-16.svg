@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#6c3483"/><stop offset="1" stop-color="#9b59b6"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/><circle cx="541" cy="191" r="362" fill="#fff" opacity="0.10"/><circle cx="748" cy="460" r="371" fill="#fff" opacity="0.10"/><circle cx="589" cy="616" r="169" fill="#fff" opacity="0.10"/>
+<text x="400" y="320" font-size="180" text-anchor="middle">🧵</text>
+<text x="400" y="450" font-size="34" fill="#ffffff" fill-opacity="0.95" text-anchor="middle"
+ font-family="'Segoe UI',Arial,sans-serif" font-weight="600">Home Textile Sets (Woven Cotton)</text>
+</svg>

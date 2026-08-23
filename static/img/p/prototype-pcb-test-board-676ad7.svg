@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#1f3a93"/><stop offset="1" stop-color="#4a69bd"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/><circle cx="402" cy="116" r="183" fill="#fff" opacity="0.10"/><circle cx="824" cy="640" r="214" fill="#fff" opacity="0.10"/><circle cx="495" cy="591" r="258" fill="#fff" opacity="0.10"/>
+<text x="400" y="320" font-size="180" text-anchor="middle">🔌</text>
+<text x="400" y="450" font-size="34" fill="#ffffff" fill-opacity="0.95" text-anchor="middle"
+ font-family="'Segoe UI',Arial,sans-serif" font-weight="600">Prototype PCB Test Board</text>
+</svg>

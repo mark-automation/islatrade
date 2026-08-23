@@ -3,8 +3,8 @@
 {% block content %}
 <div class="wrap">
  <div class="crumb"><a href="/">Home</a> › <a href="/suppliers">Suppliers</a> › {{ s.name }}</div>
- <div class="panel" style="display:flex;gap:20px;align-items:center">
-  <div style="font-size:54px">{{ s.industry[:2] }}🏭</div>
+ <div class="panel suphead">
+  <div class="avatar">{{ s.industry[:2] }}🏭</div>
   <div>
    <h1 style="font-size:22px">{{ s.name }}
     {% if s.verified %}<span class="verified">✔ VERIFIED</span>{% endif %}</h1>

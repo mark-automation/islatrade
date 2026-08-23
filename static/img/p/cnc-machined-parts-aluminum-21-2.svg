@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<rect width="800" height="600" fill="#f6f8fb"/><circle cx="366" cy="276" r="174" fill="#2e4053" opacity="0.14"/><circle cx="660" cy="575" r="384" fill="#2e4053" opacity="0.14"/><circle cx="478" cy="609" r="343" fill="#2e4053" opacity="0.14"/>
+<g stroke="#d7e0ea" stroke-width="1"><line x1="100" y1="0" x2="100" y2="600"/><line x1="240" y1="0" x2="240" y2="600"/><line x1="380" y1="0" x2="380" y2="600"/><line x1="520" y1="0" x2="520" y2="600"/><line x1="660" y1="0" x2="660" y2="600"/></g>
+<g transform="rotate(-8 400 280)"><text x="400" y="330" font-size="240" text-anchor="middle">⚙️</text></g>
+<rect x="60" y="480" width="430" height="56" rx="10" fill="#ffffff" opacity="0.92"/>
+<text x="84" y="516" font-size="26" fill="#33415c" text-anchor="start"
+ font-family="'Segoe UI',Arial,sans-serif" font-weight="600">CNC Machined Parts (Aluminum)</text>
+</svg>

@@ -2,11 +2,15 @@
 import os
 import re
 import shutil
-import subprocess
+import sqlite3
+import time
+import http.cookiejar
+import urllib.parse
 import urllib.request
 
 BASE = "http://127.0.0.1:8500"
 OUT = r"C:\Users\jorda\islatrade\site"
+PAGES_BASE = "https://mark-automation.github.io/islatrade"
 os.makedirs(OUT, exist_ok=True)
 
 
@@ -15,11 +19,11 @@ def fetch(path):
         return r.read().decode("utf-8")
 
 
-def save(rel, html):
+def save(rel, text):
     p = os.path.join(OUT, rel)
     os.makedirs(os.path.dirname(p), exist_ok=True)
     with open(p, "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(text)
 
 
 def rel_prefix(depth):
@@ -30,7 +34,6 @@ DEMO_NOTE = """
 <script>
 document.querySelectorAll('form[method=post]').forEach(function(f){
  f.addEventListener('submit',function(e){
-  e.preventDefault();
   var t=document.getElementById('mirror-note');
   if(!t){t=document.createElement('div');t.id='mirror-note';
    t.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:8px;font:14px system-ui;z-index:9999;box-shadow:0 6px 18px rgba(0,0,0,.35)';
@@ -42,29 +45,79 @@ document.querySelectorAll('form[method=post]').forEach(function(f){
 </script>
 """
 
+AUTH_SHIM = """
+<script>
+(function(){
+ var R=null;try{R=localStorage.getItem('it_role')}catch(e){}
+ function pre(){var a=document.querySelector('header nav a');if(!a)return './';
+  var h=a.getAttribute('href');return h.slice(0,h.lastIndexOf('/')+1)||'./'}
+ var nav=document.querySelector('header nav');
+ if(R&&nav){
+  nav.querySelectorAll('a[href*="register"],a[href*="login"]').forEach(function(a){a.remove()});
+  var p=pre(),d=document.createElement('a'),lo=document.createElement('a');
+  d.href=p+(R==='admin'?'admin-panel/':'supplier-admin/');
+  d.innerHTML='<b>'+(R==='admin'?'Admin panel':'Dashboard')+'</b>';
+  lo.href='#it-logout';lo.textContent='Logout';nav.appendChild(d);nav.appendChild(lo);}
+ document.addEventListener('click',function(e){
+  if(e.target.closest('a[href="#it-logout"]')){e.preventDefault();
+   try{localStorage.removeItem('it_role')}catch(x){}
+   location.href=pre();}
+ });
+ var em=document.querySelector('input[name=email]');
+ if(em&&document.querySelector('input[name=pw]')&&em.closest('form')){
+  em.closest('form').addEventListener('submit',function(ev){
+   ev.preventDefault();
+   var v=(em.value||'').trim().toLowerCase(),
+       pw=em.closest('form').querySelector('input[name=pw]').value||'',go=null;
+   if(v==='demo@islatrade.ph'&&pw==='islatrade'){go='supplier-admin/';R='supplier'}
+   else if(v==='admin@islatrade.ph'&&pw==='admin123'){go='admin-panel/';R='admin'}
+   if(go){try{localStorage.setItem('it_role',R)}catch(x){};location.href=pre()+go;return}
+   var f=em.closest('form'),t=f.querySelector('.it-err');
+   if(!t){t=document.createElement('p');t.className='it-err';
+    t.style.cssText='color:#c0392b;font-size:13px;margin-top:10px';f.appendChild(t)}
+   t.textContent='Preview mirror \\u2014 use the demo account shown below.';
+  });}
+ var rf=document.querySelector('input[name=company]');
+ if(rf&&rf.closest('form')){rf.closest('form').addEventListener('submit',function(ev){
+  ev.preventDefault();try{localStorage.setItem('it_role','supplier')}catch(x){}
+  location.href=pre()+'supplier-admin/';});}
+})();
+</script>
+"""
+
 
 def rewrite(html, depth):
     pre = rel_prefix(depth)
     html = re.sub(r'(href|src|action)="(/(?!/))', lambda m: m.group(1) + '="' + pre, html)
     # category filter links -> prebuilt category pages (before generic query strip)
     html = re.sub(r'href="(?:\./|\.\./)*products\?cat=([a-z0-9_-]+)[^"]*"',
-                  lambda m: 'href="' + pre + 'products/cat-' + m.group(1) + '/index.html"', html)
+                  lambda m: 'href="' + pre + 'products/cat-' + m.group(1) + '/"', html)
     # strip remaining query strings from internal links (static pages are prebuilt)
     html = re.sub(r'href="(?:\./|\.\./)*(products|rfq)\?[^"]*"',
-                  lambda m: 'href="' + pre + m.group(1) + '/index.html"', html)
+                  lambda m: 'href="' + pre + m.group(1) + '/"', html)
     html = html.replace('action="/rfq/tracking/message"', 'action="#"')
     # static mirror has no backend: neutralize every POST form so submits
     # never navigate into a 405/404, and tell the visitor why
-    n_post = len(re.findall(r'method="post"', html))
+    n_post = len(re.findall(r'method="post"\s+action="[^"]*"', html))
     if n_post:
-        html = re.sub(r'method="post"\s+action="[^"]*"', 'method="post" action="#" onsubmit="return false"', html)
+        html = re.sub(r'method="post"\s+action="[^"]*"', 'method="post" action="#"', html)
         html = html.replace("</body>", DEMO_NOTE + "</body>")
-    return html
+    # /logout needs a server session to kill — hand it to the client-side shim
+    html = re.sub(r'href="[^"]*logout[^"]*"', 'href="#it-logout"', html)
+    return html.replace("</body>", AUTH_SHIM + "</body>")
 
 
-def put(rel, path, extra=""):
-    depth = rel.count("/")
-    save(rel, rewrite(fetch(path), depth) + extra)
+def put(rel, path):
+    save(rel, rewrite(fetch(path), rel.count("/")))
+
+
+def snapshot(rel, path, email, pw):
+    """Fetch an authenticated page via a real login session."""
+    cj = http.cookiejar.CookieJar()
+    op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+    data = urllib.parse.urlencode({"email": email, "pw": pw}).encode()
+    op.open(BASE + "/login", data=data, timeout=15).read()
+    save(rel, rewrite(op.open(BASE + path, timeout=15).read().decode("utf-8"), rel.count("/")))
 
 
 # --- core pages ---
@@ -74,20 +127,26 @@ put("suppliers/index.html", "/suppliers")
 put("rfq/index.html", "/rfq")
 
 # categories
-import sqlite3
 con = sqlite3.connect(r"C:\Users\jorda\islatrade\islatrade.db")
 con.row_factory = sqlite3.Row
 cats = con.execute("SELECT slug FROM categories").fetchall()
 for c in cats:
     put(f"products/cat-{c['slug']}/index.html", f"/products?cat={c['slug']}")
 
-# products
-prods = con.execute("SELECT slug FROM products").fetchall()
+# products (exclude admin/dogfood QA suppliers so test data never hits the public mirror)
+excl_ids = [r["id"] for r in con.execute(
+    "SELECT id FROM suppliers WHERE COALESCE(is_admin,0)=1 OR slug LIKE 'dogfood%'")] or [-1]
+ph = ",".join("?" * len(excl_ids))
+prods = con.execute(
+    f"SELECT slug FROM products WHERE COALESCE(supplier_id,-1) NOT IN ({ph})",
+    excl_ids).fetchall()
 for p in prods:
     put(f"product/{p['slug']}/index.html", f"/product/{p['slug']}")
 
-# suppliers (skip platform admin account)
-sups = con.execute("SELECT slug FROM suppliers WHERE COALESCE(is_admin,0)=0").fetchall()
+# suppliers (skip platform admin account + dogfood QA records)
+sups = con.execute(
+    "SELECT slug FROM suppliers "
+    "WHERE COALESCE(is_admin,0)=0 AND slug NOT LIKE 'dogfood%'").fetchall()
 for s in sups:
     put(f"supplier/{s['slug']}/index.html", f"/supplier/{s['slug']}")
 
@@ -97,15 +156,22 @@ put("register/index.html", "/register")
 put("rfq/sent/index.html", "/rfq/sent")
 put("rfq/tracking/index.html", "/rfq/tracking")
 
+# logged-in dashboard snapshots (demo credentials are public on the login page;
+# forms inside are neutralized to '#' with the preview note)
+snapshot("supplier-admin/index.html", "/supplier-admin", "demo@islatrade.ph", "islatrade")
+time.sleep(1.5)  # stay under the auth rate limit
+snapshot("admin-panel/index.html", "/admin-panel", "admin@islatrade.ph", "admin123")
+
 # robots.txt + sitemap.xml with Pages-appropriate absolute URLs
-PAGES_BASE = "https://mark-automation.github.io/islatrade"
 save("robots.txt",
      "User-agent: *\n"
      "Disallow: /islatrade/supplier-admin\n"
+     "Disallow: /islatrade/admin-panel\n"
+     "Disallow: /islatrade/login\n"
+     "Disallow: /islatrade/register\n"
      "Disallow: /islatrade/logout\n"
      f"Sitemap: {PAGES_BASE}/sitemap.xml\n")
-urls = ["", "/products/", "/suppliers/", "/rfq/", "/login/", "/register/",
-        "/rfq/sent/"]
+urls = ["", "/products/", "/suppliers/", "/rfq/"]
 for c in cats:
     urls.append(f"/products/cat-{c['slug']}/")
 for p in prods:
