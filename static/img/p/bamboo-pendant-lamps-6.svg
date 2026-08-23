@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#7a5230"/><stop offset="1" stop-color="#a47148"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/><circle cx="560" cy="90" r="333" fill="#fff" opacity="0.10"/><circle cx="638" cy="486" r="203" fill="#fff" opacity="0.10"/><circle cx="446" cy="627" r="321" fill="#fff" opacity="0.10"/>
+<text x="400" y="320" font-size="180" text-anchor="middle">🪑</text>
+<text x="400" y="450" font-size="34" fill="#ffffff" fill-opacity="0.95" text-anchor="middle"
+ font-family="'Segoe UI',Arial,sans-serif" font-weight="600">Bamboo Pendant Lamps</text>
+</svg>

@@ -5,11 +5,13 @@
 <meta property="og:title" content="IslaTrade — The Philippines' B2B Marketplace">
 <meta property="og:description" content="Source from verified Filipino suppliers across 8 industries. Post RFQs, compare quotes, track orders.">
 
-<title>IslaTrade — The Philippines' B2B Marketplace</title><link rel="stylesheet" href="./static/styles.css"></head>
+<title>IslaTrade — The Philippines' B2B Marketplace</title><meta name="theme-color" content="#0038a8"><link rel="stylesheet" href="./static/styles.css"></head>
 <body>
 <header><div class="wrap">
+ <input type="checkbox" id="navt" class="navtog">
  <a class="logo" href="./">Isla<span>Trade</span></a>
  <form action="./products"><input name="q_" placeholder="Search products, suppliers…"><button>Search</button></form>
+ <label class="burger" for="navt" aria-label="Menu">☰</label>
  <nav><a href="./products">Products</a><a href="./suppliers">Suppliers</a><a href="./rfq">Post RFQ</a>
   <a href="./register">Supplier Register</a><a href="./login">Supplier login</a></nav>
 </div></header>
@@ -26,54 +28,54 @@
 <div class="wrap">
  <h2 class="sec">Browse by industry</h2>
  <div class="grid g4">
-  <a class="cattile" href="./products/cat-electronics/index.html"><span class="ic">🔌</span>Electronics &amp; Components<small>PCBs, modules, cables, consumer electronics assembly</small></a><a class="cattile" href="./products/cat-furniture/index.html"><span class="ic">🪑</span>Furniture &amp; Fixtures<small>Rattan, acacia, bamboo — world-class PH craftsmanship</small></a><a class="cattile" href="./products/cat-food/index.html"><span class="ic">🥥</span>Food &amp; Agriculture<small>Coconut products, mangoes, seafood, processed foods</small></a><a class="cattile" href="./products/cat-textiles/index.html"><span class="ic">🧵</span>Textiles &amp; Garments<small>Apparel, abaca fabrics, home textiles, made-to-order</small></a><a class="cattile" href="./products/cat-construction/index.html"><span class="ic">🏗️</span>Construction &amp; Materials<small>Cement, steel, lumber, fittings, interior finishes</small></a><a class="cattile" href="./products/cat-machinery/index.html"><span class="ic">⚙️</span>Machinery &amp; Industrial<small>Packaging machines, CNC, agricultural equipment</small></a><a class="cattile" href="./products/cat-health/index.html"><span class="ic">💊</span>Health &amp; Wellness<small>Supplements, herbal extracts, PPE, medical devices</small></a><a class="cattile" href="./products/cat-packaging/index.html"><span class="ic">📦</span>Packaging &amp; Printing<small>Corrugated boxes, labels, eco-packaging, custom prints</small></a>
+  <a class="cattile" href="./products/cat-electronics/"><span class="ic">🔌</span>Electronics &amp; Components<small>PCBs, modules, cables, consumer electronics assembly</small></a><a class="cattile" href="./products/cat-furniture/"><span class="ic">🪑</span>Furniture &amp; Fixtures<small>Rattan, acacia, bamboo — world-class PH craftsmanship</small></a><a class="cattile" href="./products/cat-food/"><span class="ic">🥥</span>Food &amp; Agriculture<small>Coconut products, mangoes, seafood, processed foods</small></a><a class="cattile" href="./products/cat-textiles/"><span class="ic">🧵</span>Textiles &amp; Garments<small>Apparel, abaca fabrics, home textiles, made-to-order</small></a><a class="cattile" href="./products/cat-construction/"><span class="ic">🏗️</span>Construction &amp; Materials<small>Cement, steel, lumber, fittings, interior finishes</small></a><a class="cattile" href="./products/cat-machinery/"><span class="ic">⚙️</span>Machinery &amp; Industrial<small>Packaging machines, CNC, agricultural equipment</small></a><a class="cattile" href="./products/cat-health/"><span class="ic">💊</span>Health &amp; Wellness<small>Supplements, herbal extracts, PPE, medical devices</small></a><a class="cattile" href="./products/cat-packaging/"><span class="ic">📦</span>Packaging &amp; Printing<small>Corrugated boxes, labels, eco-packaging, custom prints</small></a>
  </div>
  <h2 class="sec">Featured products <a href="./products">View all →</a></h2>
  <div class="grid g4">
   
-  <a class="card" href="./product/custom-pcb-assembly-smt-tht-1"><div class="thumb"><img src="./static/img/cat-electronics.svg" alt="Custom PCB Assembly (SMT/THT)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Custom'"></div>
+  <a class="card" href="./product/custom-pcb-assembly-smt-tht-1"><div class="thumb"><img src="./static/img/p/custom-pcb-assembly-smt-tht-1.svg" alt="Custom PCB Assembly (SMT/THT)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Custom'"></div>
    <div class="pbody"><div class="pname">Custom PCB Assembly (SMT/THT)</div>
     <div class="price">₱180–₱2400 <small>/ per board</small></div>
     <div class="meta">Min. order 50 · Manila Micro Circuits Corp</div>
    </div></a>
   
-  <a class="card" href="./product/handwoven-rattan-lounge-chair-4"><div class="thumb"><img src="./static/img/cat-furniture.svg" alt="Handwoven Rattan Lounge Chair" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Handwoven'"></div>
+  <a class="card" href="./product/handwoven-rattan-lounge-chair-4"><div class="thumb"><img src="./static/img/p/handwoven-rattan-lounge-chair-4.svg" alt="Handwoven Rattan Lounge Chair" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Handwoven'"></div>
    <div class="pbody"><div class="pname">Handwoven Rattan Lounge Chair</div>
     <div class="price">₱2800–₱4500 <small>/ per pc</small></div>
     <div class="meta">Min. order 20 · Cebu Rattan Works</div>
    </div></a>
   
-  <a class="card" href="./product/bamboo-pendant-lamps-6"><div class="thumb"><img src="./static/img/cat-furniture.svg" alt="Bamboo Pendant Lamps" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Bamboo'"></div>
+  <a class="card" href="./product/bamboo-pendant-lamps-6"><div class="thumb"><img src="./static/img/p/bamboo-pendant-lamps-6.svg" alt="Bamboo Pendant Lamps" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Bamboo'"></div>
    <div class="pbody"><div class="pname">Bamboo Pendant Lamps</div>
     <div class="price">₱650–₱1400 <small>/ per pc</small></div>
     <div class="meta">Min. order 30 · Pampanga Furniture Guild</div>
    </div></a>
   
-  <a class="card" href="./product/virgin-coconut-oil-vco-drums-8"><div class="thumb"><img src="./static/img/cat-food.svg" alt="Virgin Coconut Oil (VCO) Drums" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Virgin'"></div>
+  <a class="card" href="./product/virgin-coconut-oil-vco-drums-8"><div class="thumb"><img src="./static/img/p/virgin-coconut-oil-vco-drums-8.svg" alt="Virgin Coconut Oil (VCO) Drums" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Virgin'"></div>
    <div class="pbody"><div class="pname">Virgin Coconut Oil (VCO) Drums</div>
     <div class="price">₱8500–₱12000 <small>/ per 200L drum</small></div>
     <div class="meta">Min. order 20 · Davao Coco Producers Coop</div>
    </div></a>
   
-  <a class="card" href="./product/frozen-tuna-loins-sashimi-grade-11"><div class="thumb"><img src="./static/img/cat-food.svg" alt="Frozen Tuna Loins (Sashimi Grade)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Frozen'"></div>
+  <a class="card" href="./product/frozen-tuna-loins-sashimi-grade-11"><div class="thumb"><img src="./static/img/p/frozen-tuna-loins-sashimi-grade-11.svg" alt="Frozen Tuna Loins (Sashimi Grade)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Frozen'"></div>
    <div class="pbody"><div class="pname">Frozen Tuna Loins (Sashimi Grade)</div>
     <div class="price">₱280–₱420 <small>/ per kg</small></div>
     <div class="meta">Min. order 300 · Iloilo Seafood Exporters</div>
    </div></a>
   
-  <a class="card" href="./product/organic-cotton-t-shirts-blank-14"><div class="thumb"><img src="./static/img/cat-textiles.svg" alt="Organic Cotton T-Shirts (Blank)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Organic'"></div>
+  <a class="card" href="./product/organic-cotton-t-shirts-blank-14"><div class="thumb"><img src="./static/img/p/organic-cotton-t-shirts-blank-14.svg" alt="Organic Cotton T-Shirts (Blank)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Organic'"></div>
    <div class="pbody"><div class="pname">Organic Cotton T-Shirts (Blank)</div>
     <div class="price">₱110–₱210 <small>/ per dozen</small></div>
     <div class="meta">Min. order 200 · Abaca Textile Mills</div>
    </div></a>
   
-  <a class="card" href="./product/barong-tagalog-pi-a-silk-blend-15"><div class="thumb"><img src="./static/img/cat-textiles.svg" alt="Barong Tagalog (Piña-Silk Blend)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Barong'"></div>
+  <a class="card" href="./product/barong-tagalog-pi-a-silk-blend-15"><div class="thumb"><img src="./static/img/p/barong-tagalog-pi-a-silk-blend-15.svg" alt="Barong Tagalog (Piña-Silk Blend)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Barong'"></div>
    <div class="pbody"><div class="pname">Barong Tagalog (Piña-Silk Blend)</div>
     <div class="price">₱1800–₱5200 <small>/ per pc</small></div>
     <div class="meta">Min. order 50 · Abaca Textile Mills</div>
    </div></a>
   
-  <a class="card" href="./product/interior-finish-panels-bamboo-20"><div class="thumb"><img src="./static/img/cat-construction.svg" alt="Interior Finish Panels (Bamboo)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Interior'"></div>
+  <a class="card" href="./product/interior-finish-panels-bamboo-20"><div class="thumb"><img src="./static/img/p/interior-finish-panels-bamboo-20.svg" alt="Interior Finish Panels (Bamboo)" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none';this.parentNode.textContent='Interior'"></div>
    <div class="pbody"><div class="pname">Interior Finish Panels (Bamboo)</div>
     <div class="price">₱1250–₱2800 <small>/ per 20pcs</small></div>
     <div class="meta">Min. order 20 · Batangas Steel Fab</div>
@@ -116,4 +118,42 @@
 
 <footer><div class="wrap">IslaTrade — The Philippines' B2B Marketplace · Connect with verified Filipino suppliers across 8 industries<br>
 Manufacturing · Export · OEM/ODM · RFQ-driven sourcing</div></footer>
+
+<script>
+(function(){
+ var R=null;try{R=localStorage.getItem('it_role')}catch(e){}
+ function pre(){var a=document.querySelector('header nav a');if(!a)return './';
+  var h=a.getAttribute('href');return h.slice(0,h.lastIndexOf('/')+1)||'./'}
+ var nav=document.querySelector('header nav');
+ if(R&&nav){
+  nav.querySelectorAll('a[href*="register"],a[href*="login"]').forEach(function(a){a.remove()});
+  var p=pre(),d=document.createElement('a'),lo=document.createElement('a');
+  d.href=p+(R==='admin'?'admin-panel/':'supplier-admin/');
+  d.innerHTML='<b>'+(R==='admin'?'Admin panel':'Dashboard')+'</b>';
+  lo.href='#it-logout';lo.textContent='Logout';nav.appendChild(d);nav.appendChild(lo);}
+ document.addEventListener('click',function(e){
+  if(e.target.closest('a[href="#it-logout"]')){e.preventDefault();
+   try{localStorage.removeItem('it_role')}catch(x){}
+   location.href=pre();}
+ });
+ var em=document.querySelector('input[name=email]');
+ if(em&&document.querySelector('input[name=pw]')&&em.closest('form')){
+  em.closest('form').addEventListener('submit',function(ev){
+   ev.preventDefault();
+   var v=(em.value||'').trim().toLowerCase(),
+       pw=em.closest('form').querySelector('input[name=pw]').value||'',go=null;
+   if(v==='demo@islatrade.ph'&&pw==='islatrade'){go='supplier-admin/';R='supplier'}
+   else if(v==='admin@islatrade.ph'&&pw==='admin123'){go='admin-panel/';R='admin'}
+   if(go){try{localStorage.setItem('it_role',R)}catch(x){};location.href=pre()+go;return}
+   var f=em.closest('form'),t=f.querySelector('.it-err');
+   if(!t){t=document.createElement('p');t.className='it-err';
+    t.style.cssText='color:#c0392b;font-size:13px;margin-top:10px';f.appendChild(t)}
+   t.textContent='Preview mirror \u2014 use the demo account shown below.';
+  });}
+ var rf=document.querySelector('input[name=company]');
+ if(rf&&rf.closest('form')){rf.closest('form').addEventListener('submit',function(ev){
+  ev.preventDefault();try{localStorage.setItem('it_role','supplier')}catch(x){}
+  location.href=pre()+'supplier-admin/';});}
+})();
+</script>
 </body></html>

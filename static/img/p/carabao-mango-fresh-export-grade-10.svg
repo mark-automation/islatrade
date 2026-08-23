@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#0e6655"/><stop offset="1" stop-color="#16a085"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/><circle cx="255" cy="453" r="169" fill="#fff" opacity="0.10"/><circle cx="651" cy="500" r="372" fill="#fff" opacity="0.10"/><circle cx="482" cy="574" r="265" fill="#fff" opacity="0.10"/>
+<text x="400" y="320" font-size="180" text-anchor="middle">🥥</text>
+<text x="400" y="450" font-size="34" fill="#ffffff" fill-opacity="0.95" text-anchor="middle"
+ font-family="'Segoe UI',Arial,sans-serif" font-weight="600">Carabao Mango Fresh Export Grade</text>
+</svg>

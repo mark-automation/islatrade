@@ -5,11 +5,13 @@
 <meta property="og:title" content="IslaTrade — The Philippines' B2B Marketplace">
 <meta property="og:description" content="Source from verified Filipino suppliers across 8 industries. Post RFQs, compare quotes, track orders.">
 
-<title>Suppliers — IslaTrade</title><link rel="stylesheet" href="../static/styles.css"></head>
+<title>Suppliers — IslaTrade</title><meta name="theme-color" content="#0038a8"><link rel="stylesheet" href="../static/styles.css"></head>
 <body>
 <header><div class="wrap">
+ <input type="checkbox" id="navt" class="navtog">
  <a class="logo" href="../">Isla<span>Trade</span></a>
  <form action="../products"><input name="q_" placeholder="Search products, suppliers…"><button>Search</button></form>
+ <label class="burger" for="navt" aria-label="Menu">☰</label>
  <nav><a href="../products">Products</a><a href="../suppliers">Suppliers</a><a href="../rfq">Post RFQ</a>
   <a href="../register">Supplier Register</a><a href="../login">Supplier login</a></nav>
 </div></header>
@@ -128,4 +130,42 @@
 
 <footer><div class="wrap">IslaTrade — The Philippines' B2B Marketplace · Connect with verified Filipino suppliers across 8 industries<br>
 Manufacturing · Export · OEM/ODM · RFQ-driven sourcing</div></footer>
+
+<script>
+(function(){
+ var R=null;try{R=localStorage.getItem('it_role')}catch(e){}
+ function pre(){var a=document.querySelector('header nav a');if(!a)return './';
+  var h=a.getAttribute('href');return h.slice(0,h.lastIndexOf('/')+1)||'./'}
+ var nav=document.querySelector('header nav');
+ if(R&&nav){
+  nav.querySelectorAll('a[href*="register"],a[href*="login"]').forEach(function(a){a.remove()});
+  var p=pre(),d=document.createElement('a'),lo=document.createElement('a');
+  d.href=p+(R==='admin'?'admin-panel/':'supplier-admin/');
+  d.innerHTML='<b>'+(R==='admin'?'Admin panel':'Dashboard')+'</b>';
+  lo.href='#it-logout';lo.textContent='Logout';nav.appendChild(d);nav.appendChild(lo);}
+ document.addEventListener('click',function(e){
+  if(e.target.closest('a[href="#it-logout"]')){e.preventDefault();
+   try{localStorage.removeItem('it_role')}catch(x){}
+   location.href=pre();}
+ });
+ var em=document.querySelector('input[name=email]');
+ if(em&&document.querySelector('input[name=pw]')&&em.closest('form')){
+  em.closest('form').addEventListener('submit',function(ev){
+   ev.preventDefault();
+   var v=(em.value||'').trim().toLowerCase(),
+       pw=em.closest('form').querySelector('input[name=pw]').value||'',go=null;
+   if(v==='demo@islatrade.ph'&&pw==='islatrade'){go='supplier-admin/';R='supplier'}
+   else if(v==='admin@islatrade.ph'&&pw==='admin123'){go='admin-panel/';R='admin'}
+   if(go){try{localStorage.setItem('it_role',R)}catch(x){};location.href=pre()+go;return}
+   var f=em.closest('form'),t=f.querySelector('.it-err');
+   if(!t){t=document.createElement('p');t.className='it-err';
+    t.style.cssText='color:#c0392b;font-size:13px;margin-top:10px';f.appendChild(t)}
+   t.textContent='Preview mirror \u2014 use the demo account shown below.';
+  });}
+ var rf=document.querySelector('input[name=company]');
+ if(rf&&rf.closest('form')){rf.closest('form').addEventListener('submit',function(ev){
+  ev.preventDefault();try{localStorage.setItem('it_role','supplier')}catch(x){}
+  location.href=pre()+'supplier-admin/';});}
+})();
+</script>
 </body></html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#7a5230"/><stop offset="1" stop-color="#a47148"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/><circle cx="358" cy="432" r="140" fill="#fff" opacity="0.10"/><circle cx="792" cy="422" r="402" fill="#fff" opacity="0.10"/><circle cx="469" cy="626" r="251" fill="#fff" opacity="0.10"/>
+<text x="400" y="320" font-size="180" text-anchor="middle">🪑</text>
+<text x="400" y="450" font-size="34" fill="#ffffff" fill-opacity="0.95" text-anchor="middle"
+ font-family="'Segoe UI',Arial,sans-serif" font-weight="600">Office Desk Sets (Engineered Wood)</text>
+</svg>
