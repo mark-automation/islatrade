@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta name="description" content="IslaTrade — the Philippines' B2B marketplace. Source from verified Filipino suppliers across 8 industries; post RFQs free.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="IslaTrade">
+<meta property="og:title" content="IslaTrade — The Philippines' B2B Marketplace">
+<meta property="og:description" content="Source from verified Filipino suppliers across 8 industries. Post RFQs, compare quotes, track orders.">
+
+<title>Post RFQ — IslaTrade</title><link rel="stylesheet" href="../static/styles.css"></head>
+<body>
+<header><div class="wrap">
+ <a class="logo" href="../">Isla<span>Trade</span></a>
+ <form action="../products"><input name="q_" placeholder="Search products, suppliers…"><button>Search</button></form>
+ <nav><a href="../products">Products</a><a href="../suppliers">Suppliers</a><a href="../rfq">Post RFQ</a>
+ <a href="../register">Supplier Register</a><a href="../login">Log in</a></nav>
+</div></header>
+
+<div class="wrap">
+ <div class="crumb"><a href="../">Home</a> › Post RFQ</div>
+ <div class="panel" style="max-width:640px;margin:0 auto">
+  <h2 style="font-size:20px;margin-bottom:4px">Request for Quotation</h2>
+  <p class="muted">Tell suppliers what you need — verified manufacturers respond with quotes, usually within 24h.</p>
+  
+  <form method="post" action="../rfq">
+   <input type="hidden" name="product" value="0">
+   <label>Category</label>
+   <select name="category" class="f"><option value="0">General / other</option>
+    <option value="1">Electronics &amp; Components</option><option value="2">Furniture &amp; Fixtures</option><option value="3">Food &amp; Agriculture</option><option value="4">Textiles &amp; Garments</option><option value="5">Construction &amp; Materials</option><option value="6">Machinery &amp; Industrial</option><option value="7">Health &amp; Wellness</option><option value="8">Packaging &amp; Printing</option></select>
+   <label>Your name *</label><input class="f" name="name" required>
+   <label>Email *</label><input class="f" type="email" name="email" required>
+   <label>Phone</label><input class="f" name="phone">
+   <label>Company</label><input class="f" name="company">
+   <label>Quantity needed</label><input class="f" name="qty" placeholder="e.g. 500 pcs / monthly">
+   <label>Details</label><textarea class="f" name="message" rows="4" placeholder="Specs, materials, certifications, delivery target…"></textarea>
+   <button class="btn gold" style="margin-top:16px;width:100%">Send to suppliers</button>
+  </form>
+ </div>
+</div>
+
+<footer><div class="wrap">IslaTrade — The Philippines' B2B Marketplace · Connect with verified Filipino suppliers across 8 industries<br>
+Manufacturing · Export · OEM/ODM · RFQ-driven sourcing</div></footer>
+</body></html>

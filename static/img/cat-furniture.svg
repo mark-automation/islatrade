@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#7a5230"/><stop offset="1" stop-color="#a47148"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/>
+<g fill="#ffffff" opacity="0.10"><circle cx="660" cy="110" r="190"/><circle cx="100" cy="530" r="230"/><circle cx="420" cy="620" r="120"/></g>
+<g stroke="#ffffff" stroke-opacity="0.15"><line x1="0" y1="480" x2="800" y2="480"/><line x1="60" y1="0" x2="60" y2="600"/></g>
+<text x="400" y="330" font-size="170" text-anchor="middle">🪑</text>
+<text x="400" y="450" font-size="36" fill="#ffffff" fill-opacity="0.92" text-anchor="middle"
+ font-family="'Segoe UI',Arial,sans-serif" font-weight="600">Furniture & Fixtures</text>
+</svg>
