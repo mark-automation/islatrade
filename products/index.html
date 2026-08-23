@@ -297,3 +297,15 @@
 <footer><div class="wrap">IslaTrade — The Philippines' B2B Marketplace · Connect with verified Filipino suppliers across 8 industries<br>
 Manufacturing · Export · OEM/ODM · RFQ-driven sourcing</div></footer>
 </body></html>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ var inp=document.querySelector('.filters input[name=q_]');
+ if(!inp)return;
+ var cards=document.querySelectorAll('.grid.g3 > a.card');
+ inp.removeAttribute('name');
+ inp.addEventListener('input',function(){
+  var v=inp.value.toLowerCase();
+  cards.forEach(function(c){c.style.display=c.textContent.toLowerCase().includes(v)?'':'none';});
+ });
+});
+</script>
