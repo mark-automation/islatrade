@@ -253,6 +253,23 @@ ensure_site_admin()
 
 
 # ---------- helpers ----------
+# light rate limit (POST endpoints) — must be defined before the routes that call it
+_RL: dict = {}
+RL_LIMIT = int(os.environ.get("ISLATRADE_RL_LIMIT", "10"))
+RL_WINDOW = 60
+
+
+def rate_ok(ip: str) -> bool:
+    now = time.time()
+    hits = [t for t in _RL.get(ip, []) if now - t < RL_WINDOW]
+    if len(hits) >= RL_LIMIT:
+        _RL[ip] = hits
+        return False
+    hits.append(now)
+    _RL[ip] = hits
+    return True
+
+
 def q(sql, args=(), one=False):
     with db() as con:
         rows = con.execute(sql, args).fetchall()
@@ -677,23 +694,6 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", "8500")),
                 proxy_headers=True, forwarded_allow_ips=os.environ.get("IT_TRUST_PROXY", "*"))
-
-
-# ---------- light rate limit (POST endpoints) ----------
-_RL: dict = {}
-RL_LIMIT = int(os.environ.get("ISLATRADE_RL_LIMIT", "10"))
-RL_WINDOW = 60
-
-
-def rate_ok(ip: str) -> bool:
-    now = time.time()
-    hits = [t for t in _RL.get(ip, []) if now - t < RL_WINDOW]
-    if len(hits) >= RL_LIMIT:
-        _RL[ip] = hits
-        return False
-    hits.append(now)
-    _RL[ip] = hits
-    return True
 
 
 @app.get("/robots.txt")

@@ -8,7 +8,7 @@ import http.cookiejar
 import urllib.parse
 import urllib.request
 
-BASE = "http://127.0.0.1:8500"
+BASE = os.environ.get("ISLATRADE_BASE", "http://127.0.0.1:8500")
 OUT = r"C:\Users\jorda\islatrade\site"
 PAGES_BASE = "https://mark-automation.github.io/islatrade"
 PAGES_ROOT = "/islatrade"  # site base path on GitHub Pages (project site)
