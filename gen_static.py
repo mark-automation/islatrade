@@ -26,12 +26,39 @@ def rel_prefix(depth):
     return "./" if depth == 0 else "../" * depth
 
 
+DEMO_NOTE = """
+<script>
+document.querySelectorAll('form[method=post]').forEach(function(f){
+ f.addEventListener('submit',function(e){
+  e.preventDefault();
+  var t=document.getElementById('mirror-note');
+  if(!t){t=document.createElement('div');t.id='mirror-note';
+   t.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:8px;font:14px system-ui;z-index:9999;box-shadow:0 6px 18px rgba(0,0,0,.35)';
+   document.body.appendChild(t);}
+  t.textContent='Preview mirror \\u2014 sign-ups, RFQs and reviews run on the live IslaTrade app.';
+  clearTimeout(t._h);t._h=setTimeout(function(){t.remove()},3500);
+ });
+});
+</script>
+"""
+
+
 def rewrite(html, depth):
     pre = rel_prefix(depth)
     html = re.sub(r'(href|src|action)="(/(?!/))', lambda m: m.group(1) + '="' + pre, html)
-    # strip query strings from internal links (static pages are prebuilt)
-    html = re.sub(r'href="(\./|\.\./)*products\?[^"]*"', 'href="' + pre + 'products/index.html"', html)
+    # category filter links -> prebuilt category pages (before generic query strip)
+    html = re.sub(r'href="(?:\./|\.\./)*products\?cat=([a-z0-9_-]+)[^"]*"',
+                  lambda m: 'href="' + pre + 'products/cat-' + m.group(1) + '/index.html"', html)
+    # strip remaining query strings from internal links (static pages are prebuilt)
+    html = re.sub(r'href="(?:\./|\.\./)*(products|rfq)\?[^"]*"',
+                  lambda m: 'href="' + pre + m.group(1) + '/index.html"', html)
     html = html.replace('action="/rfq/tracking/message"', 'action="#"')
+    # static mirror has no backend: neutralize every POST form so submits
+    # never navigate into a 405/404, and tell the visitor why
+    n_post = len(re.findall(r'method="post"', html))
+    if n_post:
+        html = re.sub(r'method="post"\s+action="[^"]*"', 'method="post" action="#" onsubmit="return false"', html)
+        html = html.replace("</body>", DEMO_NOTE + "</body>")
     return html
 
 
@@ -63,6 +90,33 @@ for p in prods:
 sups = con.execute("SELECT slug FROM suppliers WHERE COALESCE(is_admin,0)=0").fetchall()
 for s in sups:
     put(f"supplier/{s['slug']}/index.html", f"/supplier/{s['slug']}")
+
+# auth + post-rfq confirmation pages (nav links to these on every page)
+put("login/index.html", "/login")
+put("register/index.html", "/register")
+put("rfq/sent/index.html", "/rfq/sent")
+put("rfq/tracking/index.html", "/rfq/tracking")
+
+# robots.txt + sitemap.xml with Pages-appropriate absolute URLs
+PAGES_BASE = "https://mark-automation.github.io/islatrade"
+save("robots.txt",
+     "User-agent: *\n"
+     "Disallow: /islatrade/supplier-admin\n"
+     "Disallow: /islatrade/logout\n"
+     f"Sitemap: {PAGES_BASE}/sitemap.xml\n")
+urls = ["", "/products/", "/suppliers/", "/rfq/", "/login/", "/register/",
+        "/rfq/sent/"]
+for c in cats:
+    urls.append(f"/products/cat-{c['slug']}/")
+for p in prods:
+    urls.append(f"/product/{p['slug']}/")
+for s in sups:
+    urls.append(f"/supplier/{s['slug']}/")
+sitemap_body = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                + "".join(f"<url><loc>{PAGES_BASE}{u}</loc></url>" for u in urls)
+                + "</urlset>")
+save("sitemap.xml", sitemap_body)
 
 # assets
 shutil.copytree(r"C:\Users\jorda\islatrade\static", os.path.join(OUT, "static"), dirs_exist_ok=True)
