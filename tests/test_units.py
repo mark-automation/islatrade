@@ -40,5 +40,7 @@ def test_rate_limit_blocks_after_limit_per_minute(monkeypatch):
     ip = "203.0.113.99"
     assert all(main.rate_ok(ip) for _ in range(10))
     assert not main.rate_ok(ip)          # 11th inside window -> blocked
-    main._RL[ip] = [time.time() - 120]   # window slid past -> allowed again
-    assert main.rate_ok(ip)
+    # v2 limiter is DB-backed: expire the window by aging every row past the cutoff
+    with main.db() as con:
+        con.execute("UPDATE rate_limits SET ts=ts-120 WHERE ip=?", (ip,))
+    assert main.rate_ok(ip)              # window slid past -> allowed again

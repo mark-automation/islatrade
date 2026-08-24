@@ -22,8 +22,10 @@ def test_product_create_edit_delete_lifecycle(client):
     prod = q("SELECT * FROM products WHERE name='Heartbeat Test Widget'", one=True)
     assert prod and prod["image_url"]  # auto-filled from category or placeholder
 
-    # visible on public listing + dashboard
-    assert "Heartbeat Test Widget" in client.get("/products").text
+    # visible via public search + supplier dashboard.
+    # (v2 paginates /products at 24/page ordered by featured/orders — a brand-new
+    # zero-order item lands below the seeded catalog, so discoverability = search)
+    assert "Heartbeat Test Widget" in client.get("/products", params={"q_": "Heartbeat"}).text
     assert "Heartbeat Test Widget" in client.get("/supplier-admin").text
 
     # edit

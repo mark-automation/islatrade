@@ -25,7 +25,10 @@ def test_full_rfq_to_quote_flow(client):
         "company": "Buyer Corp", "qty": "100", "message": "Need quote pls",
         "product": str(p["id"]), "category": "0",
     }, follow_redirects=False)
-    assert r.status_code == 302 and r.headers["location"] == "/rfq/sent"
+    # v2 issues a tracking token bound to the buyer email -> redirect carries it
+    assert r.status_code == 302 and r.headers["location"].startswith("/rfq/sent")
+    tok = q("SELECT token FROM rfq_tokens WHERE LOWER(email)=?",
+            (buyer.lower(),), one=True)["token"]
 
     rfq = q("SELECT * FROM rfqs WHERE email=?", (buyer,), one=True)
     assert rfq and rfq["product_id"] == p["id"]
@@ -46,20 +49,20 @@ def test_full_rfq_to_quote_flow(client):
     quote = q("SELECT * FROM quotes WHERE rfq_id=?", (rfq["id"],), one=True)
     assert quote and quote["price"] == 1234.5
 
-    # 3. buyer tracks by email and sees the quote
-    track = client.get("/rfq/tracking", params={"email": buyer})
+    # 3. buyer tracks via the issued token link (v2: email-only lookups are 403)
+    track = client.get("/rfq/tracking", params={"email": buyer, "token": tok})
     assert track.status_code == 200 and "1234.5" in track.text
 
     # 4. two-way messaging: buyer posts, supplier replies, both sides see both texts
     client.post("/rfq/tracking/message",
-                data={"rfq_id": rfq["id"], "email": buyer, "text": "Can you do 1200?"},
+                data={"rfq_id": rfq["id"], "email": buyer, "token": tok, "text": "Can you do 1200?"},
                 follow_redirects=False)
     client.post(f"/supplier-admin/rfq/{rfq['id']}/message",
                 data={"text": "Best we can do is 1210."}, follow_redirects=False)
     msgs = q("SELECT * FROM messages WHERE rfq_id=? ORDER BY created", (rfq["id"],))
     senders = [m["sender"] for m in msgs]
     assert senders == ["buyer", "supplier"]
-    track2 = client.get("/rfq/tracking", params={"email": buyer})
+    track2 = client.get("/rfq/tracking", params={"email": buyer, "token": tok})
     assert "1200" in track2.text and "1210" in track2.text
 
 
