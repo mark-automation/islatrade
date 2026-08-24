@@ -98,9 +98,28 @@ import hmac
 import secrets
 import time as _t
 
+_PBKDF2_ITERS = 120_000
+
 
 def hash_pw(pw: str) -> str:
-    return hashlib.pbkdf2_hmac("sha256", pw.encode(), b"islatrade-salt", 120_000).hex()
+    """PBKDF2-SHA256 with a fresh per-user salt; returns "<salt_hex>$<hash>"
+    so the salt travels with the stored hash (audit F-2 fix)."""
+    salt = secrets.token_hex(16)
+    digest = hashlib.pbkdf2_hmac("sha256", pw.encode(), salt.encode(), _PBKDF2_ITERS).hex()
+    return f"{salt}${digest}"
+
+
+def verify_pw(pw: str, stored: str | None) -> bool:
+    """Constant-time check. Accepts both the new per-user-salt format
+    "<salt>$<hash>" and legacy rows hashed with the old global salt."""
+    if not stored or "$" not in stored:
+        # legacy global-salt format
+        return bool(stored) and hmac.compare_digest(
+            hashlib.pbkdf2_hmac("sha256", pw.encode(), b"islatrade-salt", _PBKDF2_ITERS).hex(),
+            stored)
+    salt, _, expected = stored.partition("$")
+    got = hashlib.pbkdf2_hmac("sha256", pw.encode(), salt.encode(), _PBKDF2_ITERS).hex()
+    return hmac.compare_digest(got, expected)
 
 
 def current_supplier(request: Request):
@@ -115,7 +134,7 @@ def login_supplier(email: str, pw: str):
     s = q("SELECT * FROM suppliers WHERE email=?", (email.lower().strip(),), one=True)
     if not s or not s["pw_hash"]:
         return None, None
-    if not hmac.compare_digest(hash_pw(pw), s["pw_hash"]):
+    if not verify_pw(pw, s["pw_hash"]):
         return None, None
     tok = secrets.token_hex(16)
     with db() as con:
@@ -238,6 +257,15 @@ ensure_demo()
 
 
 def ensure_site_admin():
+    # Pre-hosting gate (audit F-1): the seed password comes from ADMIN_PASSWORD.
+    # On hosted environments (RENDER set) we REFUSE to boot with the default
+    # rather than expose a known credential publicly. Local dev keeps admin123
+    # so existing workflows/tests are unaffected.
+    seed_pw = os.environ.get("ADMIN_PASSWORD") or "admin123"
+    if os.environ.get("RENDER") and seed_pw == "admin123":
+        raise RuntimeError(
+            "ADMIN_PASSWORD must be set when RENDER is configured — "
+            "refusing to start with the default seed-admin credential.")
     with db() as con:
         has = con.execute("SELECT id FROM suppliers WHERE email=?", ("admin@islatrade.ph",)).fetchone()
         if not has:
@@ -246,7 +274,7 @@ def ensure_site_admin():
                 "response_rate,email,pw_hash,is_admin) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,1)",
                 ("IslaTrade Admin", "isla-admin", "Metro Manila", "Makati", "Platform",
                  "Platform operator account (hidden from directory).", 0, 5.0, 0, 100,
-                 "admin@islatrade.ph", hash_pw("admin123")))
+                 "admin@islatrade.ph", hash_pw(seed_pw)))
 
 
 ensure_site_admin()
