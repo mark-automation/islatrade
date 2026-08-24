@@ -7,17 +7,17 @@
 <div class="wrap">
  <div class="crumb"><a href="/">Home</a> › <a href="/products">Products</a> › {{ p.name }}</div>
  <div class="detail">
-  <div><div class="bigthumb">{% if p.image_url %}<img id="it-main" src="{{ p.image_url }}" alt="{{ p.name }}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentNode.textContent='{{ p.cicon }}'">{% else %}{{ p.cicon }}{% endif %}</div>
+  <div><div class="bigthumb">{% if p.image_url %}<img id="it-main" src="{{ p.image_url }}" alt="{{ p.name }}" width="800" height="600" onerror="this.parentNode.textContent='{{ p.cicon }}'">{% else %}{{ p.cicon }}{% endif %}</div>
    <div style="display:flex;gap:8px;margin-top:10px">
     {% if p.image_url %}
-     {% for v in ['', '-2', '-3'] %}<div class="bigthumb gthumb{% if not v %} gsel{% endif %}" data-src="{{ p.image_url.replace('.svg', v + '.svg') }}" style="height:64px;overflow:hidden;cursor:pointer{% if not v %};outline:2px solid #0038a8;outline-offset:-2px{% endif %}"><img src="{{ p.image_url.replace('.svg', v + '.svg') }}" alt="{{ p.name }} photo {{ loop.index }}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.style.display='none'"></div>{% endfor %}
+     {% for v in ['', '-2', '-3'] %}<div class="bigthumb gthumb{% if not v %} gsel{% endif %}" data-src="{{ p.image_url.replace('.jpg', v + '.jpg').replace('.png', v + '.png') }}" style="aspect-ratio:4/3;overflow:hidden;cursor:pointer{% if not v %};outline:2px solid var(--accent);outline-offset:-2px{% endif %}"><img src="{{ p.image_url.replace('.jpg', v + '.jpg').replace('.png', v + '.png') }}" alt="{{ p.name }} photo {{ loop.index }}" width="200" height="150" loading="lazy" onerror="this.parentNode.style.display='none'"></div>{% endfor %}
     {% else %}{% for i in [1,2,3] %}<div class="bigthumb" style="height:64px;font-size:28px">{{ p.cicon }}</div>{% endfor %}{% endif %}
    </div>
    {% if p.image_url %}<script>
    document.querySelectorAll('.gthumb').forEach(function(t){t.addEventListener('click',function(){
     var m=document.getElementById('it-main');if(m&&t.dataset.src)m.src=t.dataset.src;
     document.querySelectorAll('.gthumb').forEach(function(x){x.classList.remove('gsel');x.style.outline=''});
-    t.classList.add('gsel');t.style.outline='2px solid #0038a8';t.style.outlineOffset='-2px';
+    t.classList.add('gsel');t.style.outline='2px solid var(--accent)';t.style.outlineOffset='-2px';
    });});</script>{% endif %}
   </div></div>
   <div>
@@ -67,7 +67,7 @@
  </div>
  {% if related %}<h2 class="sec">Related products</h2>
  <div class="grid g4">{% for r in related %}
-  <a class="card" href="/product/{{ r.slug }}"><div class="thumb">{% if r.image_url %}<img src="{{ r.image_url }}" alt="{{ r.name }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">{% else %}{{ r.name.split()[0][:12] }}{% endif %}</div>
+   <a class="card" href="/product/{{ r.slug }}"><div class="thumb">{% if r.image_url %}<img src="{{ r.image_url }}" alt="{{ r.name }}" width="400" height="300" loading="lazy" onerror="this.style.display='none'">{% else %}{{ r.name.split()[0][:12] }}{% endif %}</div>
    <div class="pbody"><div class="pname">{{ r.name }}</div>
     <div class="price">₱{{ '%.0f'|format(r.price_min) }}+ </div><div class="meta">{{ r.sname }}</div></div></a>{% endfor %}
  </div>{% endif %}

@@ -1,0 +1,110 @@
+# Image credits
+
+Photos via Wikimedia Commons (CC-licensed / public domain).
+
+- `cat-construction.jpg` — File:A craneparked infront of a steel structure at a tea factory construction site in Kyamuhunga Town Council in Western Uganda 04.jpg by BalukuBrian (CC BY-SA 4.0) via Wikimedia Commons
+- `cat-electronics.jpg` — File:Macro circuit board.JPG by Ingo Dierking (CC BY-SA 4.0) via Wikimedia Commons
+- `cat-food.jpg` — File:Fruits (Legazpi Sunday Market, Makati).jpg by Churihan (CC BY-SA 4.0) via Wikimedia Commons
+- `cat-furniture.jpg` — File:Woodworking shop filled with tools, materials, and unfinished furniture pieces during a busy workday.jpg by Shixart1985 (CC BY 2.0) via Wikimedia Commons
+- `cat-health.jpg` — File:Hadu-clinic- Natural Herbal Medicine.jpg by Haduclinic (CC BY 4.0) via Wikimedia Commons
+- `cat-machinery.jpg` — File:Industrial manufacturing machine operating in a well organized factory workshop.jpg by Shixart1985 (CC BY 2.0) via Wikimedia Commons
+- `cat-packaging.jpg` — File:Packaging Material.jpg by User:GatiPackersddun (CC BY-SA 4.0) via Wikimedia Commons
+- `cat-textiles.jpg` — File:GuatemalaWeavings79.jpg by Infrogmation (CC BY-SA 3.0) via Wikimedia Commons
+- `hero.jpg` — File:North Harbor, Manila International Container Terminal (Tondo, Manila)(2018-02-05).jpg by Patrick Roque (CC BY-SA 4.0) via Wikimedia Commons
+- `abaca-fabric-rolls-handloom-13.jpg` — File:GuatemalaWeavings79.jpg by Infrogmation (CC BY-SA 3.0) via Wikimedia Commons
+- `abaca-fabric-rolls-handloom-13-2.jpg` — File:Machine used for weaving handloom at Nameri, Assam.jpg by Rohit Sharma (CC BY-SA 4.0) via Wikimedia Commons
+- `abaca-fabric-rolls-handloom-13-3.jpg` — File:Chau Doc, weaving loom.jpg by alex.ch from Zurich, Switzerland (CC BY 2.0) via Wikimedia Commons
+- `acacia-dining-table-solid-wood-5.jpg` — File:17-the-oeser-virtual-piano-instruments-wood.jpg by Key Instruments (CC BY-SA 4.0) via Wikimedia Commons
+- `acacia-dining-table-solid-wood-5-2.jpg` — File:Building with assurance (1921) (14741068196).jpg by Morgan Woodwork Organization (No restrictions) via Wikimedia Commons
+- `acacia-dining-table-solid-wood-5-3.jpg` — File:Building with assurance (1921) (14783884103).jpg by Morgan Woodwork Organization (No restrictions) via Wikimedia Commons
+- `automatic-filling-machines-22.jpg` — File:Bottling machine filling bottle.jpg by Emma Wallace (CC BY-SA 2.0) via Wikimedia Commons
+- `automatic-filling-machines-22-2.jpg` — File:Beer bottle washing machine in the fron and filling machine in the back.JPG by AlfvanBeem (CC0) via Wikimedia Commons
+- `automatic-filling-machines-22-3.jpg` — File:Bottle Filling Machine.jpg by Иван (CC BY-SA 4.0) via Wikimedia Commons
+- `bamboo-pendant-lamps-6.jpg` — File:Bamboo lamp.jpg by Medhi jyoti (CC BY-SA 4.0) via Wikimedia Commons
+- `bamboo-pendant-lamps-6-2.jpg` — File:Bamboo carving lamp, Konkan, Maharashtra.jpg by Art Projects MKCL KF (CC BY-SA 4.0) via Wikimedia Commons
+- `bamboo-pendant-lamps-6-3.jpg` — File:Bamboo carved table lamp, Konkan, Maharashtra.jpg by Art Projects MKCL KF (CC BY-SA 4.0) via Wikimedia Commons
+- `barong-tagalog-pi-a-silk-blend-15.png` — File:Barong Tagalog.png by Inkallyoucan0922 (CC BY 4.0) via Wikimedia Commons
+- `barong-tagalog-pi-a-silk-blend-15-2.jpg` — File:Barong Tagalog.jpg by Barongguy1 (CC BY-SA 3.0) via Wikimedia Commons
+- `barong-tagalog-pi-a-silk-blend-15-3.jpg` — File:Piña Barong tagalog AklanA.jpg by ? (CC BY-SA 4.0) via Wikimedia Commons
+- `bluetooth-audio-modules-2.jpg` — File:Marantz SD-60 main audio PCB - AN6208 recording amplifier IC.jpg by Retired electrician (CC0) via Wikimedia Commons
+- `bluetooth-audio-modules-2-2.jpg` — File:Inside of Homemade 2.1 Audio Power Amplifier (6639649273).jpg by Dilshan Jayakody from Maharagama, Sri Lanka (CC BY-SA 2.0) via Wikimedia Commons
+- `bluetooth-audio-modules-2-3.jpg` — File:Highlite DAP Audio PMA-82 - board 1 - STMicroelectronics TL084CN-7685.jpg by Raimond Spekking (CC BY-SA 4.0) via Wikimedia Commons
+- `carabao-mango-fresh-export-grade-10.jpg` — File:Philippine Mangoes.jpg by Havagut (CC0) via Wikimedia Commons
+- `carabao-mango-fresh-export-grade-10-2.jpg` — File:Artful Philippine Carabao Mango Pyramid.jpg by QueenCityCebu (CC BY-SA 4.0) via Wikimedia Commons
+- `carabao-mango-fresh-export-grade-10-3.jpg` — File:Philippine Carabao Mango - panoramio.jpg by Willy Vergara (CC BY-SA 3.0) via Wikimedia Commons
+- `cnc-machined-parts-aluminum-21.jpg` — File:Sparks fly at metal tech 150623-F-CB366-093.jpg by Senior Airman David Owsianka (Public domain) via Wikimedia Commons
+- `cnc-machined-parts-aluminum-21-2.jpg` — File:91E allied trade specialist (9589608).jpg by U.S. Army 310ESC by Capt. Robert Wooldridge (Public domain) via Wikimedia Commons
+- `cnc-machined-parts-aluminum-21-3.jpg` — File:Secretary Perdue tour and round table at Jane Addams Resource Corporation (20200305-FNS-LSC-0737).jpg by USDAgov (Public domain) via Wikimedia Commons
+- `coconut-charcoal-briquettes-9.jpg` — File:Starting the charcoal.jpg by Tomascastelazo (CC BY-SA 4.0) via Wikimedia Commons
+- `coconut-charcoal-briquettes-9-2.jpg` — File:Smoldering charcoal briquettes.JPG by Juliancolton (Public domain) via Wikimedia Commons
+- `coconut-charcoal-briquettes-9-3.jpg` — File:Charcoal briquettes in bags.jpg by Ossewa (CC BY-SA 4.0) via Wikimedia Commons
+- `corrugated-boxes-custom-print-28.jpg` — File:Medical mercury thermometer with velvet-lined cardboard box - focus stack (2020-05-25).jpg by Franz van Duns (CC BY-SA 4.0) via Wikimedia Commons
+- `corrugated-boxes-custom-print-28-2.jpg` — File:Flaps held open with clips that allow boxes to be stacked for transport while open.jpg by WillNemoy (CC BY-SA 4.0) via Wikimedia Commons
+- `corrugated-boxes-custom-print-28-3.jpg` — File:Cardboard boxes in different sizes for sale - Thailand Post.JPG by User:Mattes (CC BY-SA 3.0) via Wikimedia Commons
+- `custom-label-printing-rolls-31.jpg` — File:Tobacco Museum in Maia - printing the labels 01.jpg by Kritzolina (CC BY-SA 4.0) via Wikimedia Commons
+- `custom-label-printing-rolls-31-2.jpg` — File:Père-Lachaise - Division 56 - Roll 04.jpg by Pierre-Yves Beaudouin (CC BY-SA 4.0) via Wikimedia Commons
+- `custom-label-printing-rolls-31-3.jpg` — File:Père-Lachaise - Division 56 - Roll 05.jpg by Pierre-Yves Beaudouin (CC BY-SA 4.0) via Wikimedia Commons
+- `custom-pcb-assembly-smt-tht-1.jpg` — File:RS 42471-12 PCB 02.jpg by Mister rf (CC BY-SA 4.0) via Wikimedia Commons
+- `custom-pcb-assembly-smt-tht-1-2.jpg` — File:RS 42471-12 PCB solder side.jpg by Mister rf (CC BY-SA 4.0) via Wikimedia Commons
+- `custom-pcb-assembly-smt-tht-1-3.jpg` — File:RS 42471-12 PCB.jpg by Mister rf (CC BY-SA 4.0) via Wikimedia Commons
+- `dried-mango-slices-premium-12.jpg` — File:Heap of Sun-dried mango slices.jpg by Lalsing Vanya Valavi from Dhadgaon (Akrani), Nandurbar (CC0) via Wikimedia Commons
+- `dried-mango-slices-premium-12-2.jpg` — File:Dry Mango Slices (Mango Orugulu).jpg by Krishna satya 333 (CC BY 4.0) via Wikimedia Commons
+- `dried-mango-slices-premium-12-3.jpg` — File:Sun-dried sliced mangoes.jpg by Lalsing Vanya Valavi from Dhadgaon (Akrani), Nandurbar (CC0) via Wikimedia Commons
+- `eco-mailers-kraft-biodegradable-29.jpg` — File:Handmade Envelope (11).jpg by Mr.ちゅらさん (CC BY-SA 4.0) via Wikimedia Commons
+- `eco-mailers-kraft-biodegradable-29-2.jpg` — File:Handmade Envelope (9).jpg by Mr.ちゅらさん (CC BY-SA 4.0) via Wikimedia Commons
+- `eco-mailers-kraft-biodegradable-29-3.jpg` — File:Handmade Envelope (1).jpg by Mr.ちゅらさん (CC BY-SA 4.0) via Wikimedia Commons
+- `flexible-packaging-film-rolls-30.jpg` — File:Plastic dinnerware, 1979.jpg by Takkk (CC BY-SA 3.0) via Wikimedia Commons
+- `flexible-packaging-film-rolls-30-2.jpg` — File:Kodak Instamatic X-15 2015-11-28 penultimate roll of 126 film.jpg by Robert Couse-Baker (CC BY 2.0) via Wikimedia Commons
+- `flexible-packaging-film-rolls-30-3.jpg` — File:Clingfilm.jpg by Ilmari Karonen at English Wikipedia (Public domain) via Wikimedia Commons
+- `frozen-tuna-loins-sashimi-grade-11.jpg` — File:DFC 4014 Freshly made steak tartare on crusty rolls topped with chopped onions and served with sliced cucumber tomato and greens.jpg by PattayaPatrol (CC BY-SA 4.0) via Wikimedia Commons
+- `gift-boxes-rigid-magnetic-close-32.jpg` — File:Snuffbox MET SF17 190 1161 img2.jpg by Jean Ducrollay (CC0) via Wikimedia Commons
+- `gift-boxes-rigid-magnetic-close-32-2.jpg` — File:Kist met negen flessen-Rijksmuseum NG-444.jpeg by ? (Public domain) via Wikimedia Commons
+- `gift-boxes-rigid-magnetic-close-32-3.jpg` — File:Holiday catalogue. (1905) (14795979393).jpg by Internet Archive Book Images (No restrictions) via Wikimedia Commons
+- `handwoven-rattan-lounge-chair-4.jpg` — File:RATTAN CHAIR WITH PAPERCRETE POT.jpg by Atsmgysy2254 (CC BY-SA 4.0) via Wikimedia Commons
+- `handwoven-rattan-lounge-chair-4-2.jpg` — File:Rattan Chair.jpg by Sidheeq (CC BY-SA 4.0) via Wikimedia Commons
+- `handwoven-rattan-lounge-chair-4-3.jpg` — File:Rattan chair.jpg by Chris 73 (CC BY-SA 3.0) via Wikimedia Commons
+- `herbal-extract-capsules-private-label-25.jpg` — File:Pill Bottle SpilledNo.jpg by User:Mpelletier1 (CC BY-SA 3.0) via Wikimedia Commons
+- `herbal-extract-capsules-private-label-25-2.jpg` — File:Capsules Spilling from Bottle (34356373370).jpg by NIAID (CC BY 2.0) via Wikimedia Commons
+- `herbal-extract-capsules-private-label-25-3.jpg` — File:Pill Bottle Spilled.jpg by Mpelletier1 (CC BY-SA 3.0) via Wikimedia Commons
+- `home-textile-sets-woven-cotton-16.jpg` — File:Prześcieradło.jpg by bartek3_14 (CC BY-SA 2.5) via Wikimedia Commons
+- `home-textile-sets-woven-cotton-16-2.jpg` — File:Bed Finial, 15th century (CH 18457267).jpg by Unknown artistUnknown artist (Public domain) via Wikimedia Commons
+- `home-textile-sets-woven-cotton-16-3.jpg` — File:Russian patients folding sheets (McGee 8118), National Museum of Health and Medicine (4437552997).jpg by National Museum of  Health and Medicine (CC BY 2.0) via Wikimedia Commons
+- `interior-finish-panels-bamboo-20.jpg` — File:Bamboo Weaving.jpg by MaxixKatana (CC BY-SA 4.0) via Wikimedia Commons
+- `interior-finish-panels-bamboo-20-2.jpg` — File:Dish with tiger and bamboo (IA mma dish with tiger and bamboo 208379).jpg by ? (Public domain) via Wikimedia Commons
+- `interior-finish-panels-bamboo-20-3.jpg` — File:Drawing, Wall Elevation with Panels of Chinese Figures, for King's Library, Royal Pavilion, Brighton, 1815–22 (CH 18609953).jpg by Unknown artistUnknown artist (Public domain) via Wikimedia Commons
+- `kiln-dried-lumber-mahogany-19.jpg` — File:Canadian forest industries 1916 (1916) (20338195849).jpg by Internet Archive Book Images (No restrictions) via Wikimedia Commons
+- `kiln-dried-lumber-mahogany-19-2.jpg` — File:Canadian forest industries 1882 (1882) (19900270844).jpg by Internet Archive Book Images (No restrictions) via Wikimedia Commons
+- `kiln-dried-lumber-mahogany-19-3.jpg` — File:Forest Products Week (20230919-FS-KM-024).jpg by Forest Service Photography (Public domain) via Wikimedia Commons
+- `moringa-powder-food-grade-26.jpg` — File:Turmeric and Moringa oleifera powder CNE 02.jpg by CNEcija12345 (CC BY-SA 4.0) via Wikimedia Commons
+- `moringa-powder-food-grade-26-2.jpg` — File:Moringa leaves powder.jpg by Satyalatha (CC BY-SA 4.0) via Wikimedia Commons
+- `moringa-powder-food-grade-26-3.jpg` — File:Moringa oleifera powder.jpg by CNEcija12345 (CC BY-SA 4.0) via Wikimedia Commons
+- `nitrile-gloves-medical-grade-27.jpg` — File:Nitrile Gloves holder 20230316 110111.jpg by Kiran891 (CC BY-SA 4.0) via Wikimedia Commons
+- `nitrile-gloves-medical-grade-27-2.jpg` — File:ATOMO Dental premium quality Nitrile Gloves Specification.JPG by Atomo Dental (CC BY-SA 4.0) via Wikimedia Commons
+- `nitrile-gloves-medical-grade-27-3.jpg` — File:Nitrile Glove for Clean Room.jpg by BlueThunderTechnologies (CC BY-SA 4.0) via Wikimedia Commons
+- `office-desk-sets-engineered-wood-7.jpg` — File:EFTA00001747 - Open white door reveals office with wooden desk chair and blue ceiling.jpg by Federal Bureau of Investigation (Public domain) via Wikimedia Commons
+- `office-desk-sets-engineered-wood-7-2.jpg` — File:EFTA00000888 - Wooden-walled office with a red desk computer guitar and zebra-patterned rug.jpg by Federal Bureau of Investigation (Public domain) via Wikimedia Commons
+- `office-desk-sets-engineered-wood-7-3.jpg` — File:EFTA00001428 - Richly decorated office with a large wooden desk ornate furniture and vintage decor.jpg by Federal Bureau of Investigation (Public domain) via Wikimedia Commons
+- `organic-cotton-t-shirts-blank-14.jpg` — File:T-Shirt folding skills (4111373509).jpg by Christian Heilmann (CC BY 2.0) via Wikimedia Commons
+- `organic-cotton-t-shirts-blank-14-2.jpg` — File:Twitch T-shirt, Peanuts T-shirt, Aorus laptop and MSI laptop (14892417627).jpg by Sinchen.Lin (CC BY 2.0) via Wikimedia Commons
+- `organic-cotton-t-shirts-blank-14-3.png` — File:Mockup-of-a-folded-t-shirt-featuring-different-items-33683.png by Hugo.magazine (CC BY-SA 4.0) via Wikimedia Commons
+- `post-harvest-dryers-biomass-24.jpg` — File:Daing na bangus with egg and rice.jpg by Aerous (CC BY-SA 4.0) via Wikimedia Commons
+- `post-harvest-dryers-biomass-24-2.jpg` — File:JfSantaLucia0171AngatBulacanfvf 08.JPG by Judgefloro (CC BY-SA 4.0) via Wikimedia Commons
+- `post-harvest-dryers-biomass-24-3.jpg` — File:Drying Grain by Frank Bond.jpg by Frank Bond (Public domain) via Wikimedia Commons
+- `prototype-pcb-test-board-676ad7.jpg` — File:Circuit Board 2015.jpg by Jguarin (CC BY-SA 4.0) via Wikimedia Commons
+- `prototype-pcb-test-board-676ad7-2.jpg` — File:Circuit board.jpg by Mcyr5397 (CC BY-SA 3.0) via Wikimedia Commons
+- `prototype-pcb-test-board-676ad7-3.jpg` — File:Prototype version of modified Heathkit HD-1410 electronic keyer (31182657652).jpg by Dilshan Jayakody from Maharagama, Sri Lanka (CC BY-SA 2.0) via Wikimedia Commons
+- `ready-mix-concrete-c40-17.jpg` — File:Abandoned concrete factory mechanism.jpg by Diacritica (CC BY 3.0) via Wikimedia Commons
+- `ready-mix-concrete-c40-17-2.jpg` — File:Concrete pouring Katowice.jpg by Gnangcomapp (CC BY-SA 4.0) via Wikimedia Commons
+- `ready-mix-concrete-c40-17-3.jpg` — File:In-situ concrete pouring.jpg by Bernardobenzecry (CC BY-SA 4.0) via Wikimedia Commons
+- `rice-milling-equipment-23.jpg` — File:Rice mill in Laos.jpg by Basile Morin (CC BY-SA 4.0) via Wikimedia Commons
+- `rice-milling-equipment-23-2.jpg` — File:Rice mill, Kampung Rawa 2014-06-20.jpg by Crisco 1492 (CC BY-SA 3.0) via Wikimedia Commons
+- `rice-milling-equipment-23-3.jpg` — File:Coin Rice Mill Machine Takumi no Seimai 20170825.jpg by 円周率３パーセント (CC BY-SA 4.0) via Wikimedia Commons
+- `structural-steel-beams-w12-18.jpg` — File:'Cell form' steel beams. - geograph.org.uk - 486902.jpg by Steve  F (CC BY-SA 2.0) via Wikimedia Commons
+- `structural-steel-beams-w12-18-2.png` — File:PSM V88 D194 Steel beams of the collapsed quebec bridge.png by Unknown authorUnknown author (Public domain) via Wikimedia Commons
+- `structural-steel-beams-w12-18-3.jpg` — File:Steel beams stacked beside a building in a construction yard.jpg by Shixart1985 (CC BY 2.0) via Wikimedia Commons
+- `virgin-coconut-oil-vco-drums-8.jpg` — File:Coconut oil bottle in the background of coconuts from Kaleeswari Farm.jpg by deadrat (CC BY-SA 4.0) via Wikimedia Commons
+- `virgin-coconut-oil-vco-drums-8-2.jpg` — File:Coconut oil bottle in the background of dried coconuts from Kaleeswari Farm.jpg by deadrat (CC BY-SA 4.0) via Wikimedia Commons
+- `virgin-coconut-oil-vco-drums-8-3.jpg` — File:9129Processing and cooking of coconut healing oil in the Philippines 55.jpg by Judgefloro (CC0) via Wikimedia Commons
+- `wire-harness-cable-assemblies-3.jpg` — File:Cable-lacing-harness-mockup.jpg by David J. Fred (Dfred) (CC BY-SA 2.5) via Wikimedia Commons
+- `wire-harness-cable-assemblies-3-2.jpg` — File:Wire harness for aftermarket head unit.jpeg by Zuzu (CC BY-SA 3.0) via Wikimedia Commons
+- `wire-harness-cable-assemblies-3-3.jpg` — File:Revox B215 - cable harness.jpg by Retired electrician (CC0) via Wikimedia Commons
