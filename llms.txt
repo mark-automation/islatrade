@@ -1,0 +1,28 @@
+# IslaTrade — The Philippines' B2B Marketplace
+
+> Alibaba-grade B2B marketplace for the Philippines: source from verified Filipino suppliers across 8 industries, compare product listings with PHP pricing and minimum orders, and post Requests for Quotation (RFQs) free. Built by Mark1 Automation; production app at islatrade.onrender.com (deploy pending), this mirror holds the public catalog.
+
+IslaTrade connects international buyers with Philippine manufacturers, growers, and makers. Products carry export-grade detail (pricing tiers, minimum order quantities, supplier attribution). Suppliers are verified across electronics, furniture, food & agriculture, textiles, construction, machinery, health & wellness, and packaging. Buyers post RFQs free; suppliers register to list products. This static mirror exposes the full public catalog: home, product categories, individual product pages, and supplier profiles. Account/login/register/admin routes are application-only and not part of the public catalog. The live transactional app (RFQ submission, accounts) ships at islatrade.onrender.com.
+
+## Catalog sections
+
+- [Home](https://mark-automation.github.io/islatrade/): overview, industry tiles, featured products
+- [All products](https://mark-automation.github.io/islatrade/products/): full searchable product listing
+- [Suppliers](https://mark-automation.github.io/islatrade/suppliers/): directory of verified Filipino suppliers
+- [Post RFQ](https://mark-automation.github.io/islatrade/rfq/): request-for-quotation explainer (submission in live app)
+
+## Industries
+
+- [Electronics & Components](https://mark-automation.github.io/islatrade/products/cat-electronics/)
+- [Furniture & Fixtures](https://mark-automation.github.io/islatrade/products/cat-furniture/)
+- [Food & Agriculture](https://mark-automation.github.io/islatrade/products/cat-food/)
+- [Textiles & Garments](https://mark-automation.github.io/islatrade/products/cat-textiles/)
+- [Construction & Materials](https://mark-automation.github.io/islatrade/products/cat-construction/)
+- [Machinery & Industrial](https://mark-automation.github.io/islatrade/products/cat-machinery/)
+- [Health & Wellness](https://mark-automation.github.io/islatrade/products/cat-health/)
+- [Packaging & Printing](https://mark-automation.github.io/islatrade/products/cat-packaging/)
+
+## Notes
+
+- Full machine-readable URL list: [sitemap.xml](https://mark-automation.github.io/islatrade/sitemap.xml) (product pages under /product/, supplier profiles under /supplier/)
+- Pricing is in Philippine pesos (₱); each product page states price range, minimum order, and supplying company
