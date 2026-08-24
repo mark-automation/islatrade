@@ -718,12 +718,6 @@ def api_rfqs(request: Request):
     return [dict(r) for r in q("SELECT * FROM rfqs ORDER BY created DESC LIMIT 100")]
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", "8500")),
-                proxy_headers=True, forwarded_allow_ips=os.environ.get("IT_TRUST_PROXY", "*"))
-
-
 @app.get("/robots.txt")
 def robots():
     return HTMLResponse(
@@ -752,3 +746,9 @@ def sitemap():
 @app.get("/health")
 def health():
     return {"ok": True, "ts": time.time()}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", "8500")),
+                proxy_headers=True, forwarded_allow_ips=os.environ.get("IT_TRUST_PROXY", "*"))
