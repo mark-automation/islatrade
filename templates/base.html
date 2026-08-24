@@ -5,7 +5,7 @@
 <meta property="og:title" content="IslaTrade — The Philippines' B2B Marketplace">
 <meta property="og:description" content="Source from verified Filipino suppliers across 8 industries. Post RFQs, compare quotes, track orders.">
 {% endblock %}
-<title>{% block title %}IslaTrade — The Philippines' B2B Marketplace{% endblock %}</title><meta name="theme-color" content="#0038a8"><link rel="stylesheet" href="/static/styles.css"></head>
+<title>{% block title %}IslaTrade — The Philippines' B2B Marketplace{% endblock %}</title><meta name="theme-color" content="#0038a8"><link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png"><link rel="apple-touch-icon" href="/static/apple-touch-icon.png"><link rel="stylesheet" href="/static/styles.css"></head>
 <body>
 <header><div class="wrap">
  <input type="checkbox" id="navt" class="navtog">
@@ -14,6 +14,7 @@
  <label class="burger" for="navt" aria-label="Menu">☰</label>
  <nav><a href="/products">Products</a><a href="/suppliers">Suppliers</a><a href="/rfq">Post RFQ</a>
   {% if me %}{% if me.is_admin %}<a href="/admin-panel"><b>Admin panel</b></a>{% else %}<a href="/supplier-admin"><b>Dashboard</b></a>{% endif %}<a href="/logout">Logout</a>
+  {% elif buyer %}<a href="/buyer/dashboard"><b>My inquiries</b></a><a href="/buyer/logout">Logout</a>
   {% else %}<a href="/register">Supplier Register</a><a href="/login">Supplier login</a>{% endif %}</nav>
 </div></header>
 {% block content %}{% endblock %}
