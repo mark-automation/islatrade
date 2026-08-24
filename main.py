@@ -14,6 +14,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.gzip import GZipMiddleware
 
 BASE = Path(__file__).parent
 # ISLATRADE_DB lets the test suite redirect all reads/writes to a scratch DB
@@ -21,14 +22,19 @@ BASE = Path(__file__).parent
 DB = Path(os.environ.get("ISLATRADE_DB") or BASE / "islatrade.db")
 
 app = FastAPI(title="IslaTrade")
+app.add_middleware(GZipMiddleware, minimum_size=800)  # HTML/JSON compress on the way out
 app.mount("/static", StaticFiles(directory=str(BASE / "static")), name="static")
 tpl = Jinja2Templates(directory=str(BASE / "templates"))
 
 
 # ---------- DB ----------
 def db():
-    con = sqlite3.connect(DB)
+    con = sqlite3.connect(DB, timeout=10)
     con.row_factory = sqlite3.Row
+    # WAL + busy_timeout: concurrent readers don't block the writer and brief
+    # write contention waits instead of raising SQLITE_BUSY (v2 traffic floor)
+    con.execute("PRAGMA journal_mode=WAL")
+    con.execute("PRAGMA busy_timeout=5000")
     con.execute("PRAGMA foreign_keys=ON")
     return con
 
@@ -66,6 +72,39 @@ CREATE TABLE IF NOT EXISTS notifications(
 CREATE TABLE IF NOT EXISTS reviews(
   id INTEGER PRIMARY KEY, product_id INTEGER REFERENCES products(id),
   author TEXT, email TEXT, rating INTEGER, text TEXT, created REAL);
+CREATE TABLE IF NOT EXISTS buyers(
+  id INTEGER PRIMARY KEY, name TEXT, company TEXT, email TEXT UNIQUE,
+  pw_hash TEXT, created REAL);
+CREATE TABLE IF NOT EXISTS orders(
+  id INTEGER PRIMARY KEY, rfq_id INTEGER REFERENCES rfqs(id),
+  quote_id INTEGER REFERENCES quotes(id), buyer_id INTEGER REFERENCES buyers(id),
+  supplier_id INTEGER REFERENCES suppliers(id), status TEXT DEFAULT 'placed',
+  total REAL, created REAL);
+CREATE TABLE IF NOT EXISTS rate_limits(
+  ip TEXT NOT NULL, ts REAL NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_rate_ip_ts ON rate_limits(ip, ts);
+CREATE TABLE IF NOT EXISTS rfq_tokens(
+  token TEXT PRIMARY KEY, email TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_products_cat ON products(category_id);
+CREATE INDEX IF NOT EXISTS idx_products_sup ON products(supplier_id);
+CREATE INDEX IF NOT EXISTS idx_rfqs_product ON rfqs(product_id);
+CREATE INDEX IF NOT EXISTS idx_rfqs_category ON rfqs(category_id);
+CREATE INDEX IF NOT EXISTS idx_quotes_rfq ON quotes(rfq_id);
+CREATE INDEX IF NOT EXISTS idx_messages_rfq ON messages(rfq_id);
+CREATE INDEX IF NOT EXISTS idx_notifs_sup_read ON notifications(supplier_id, read);
+CREATE INDEX IF NOT EXISTS idx_sessions_sup ON sessions(supplier_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_prod ON reviews(product_id);
+CREATE VIRTUAL TABLE IF NOT EXISTS products_fts USING fts5(
+  name, descr, content='products', content_rowid='id');
+CREATE TRIGGER IF NOT EXISTS products_ai AFTER INSERT ON products BEGIN
+  INSERT INTO products_fts(rowid,name,descr) VALUES(new.id,new.name,new.descr); END;
+CREATE TRIGGER IF NOT EXISTS products_ad AFTER DELETE ON products BEGIN
+  INSERT INTO products_fts(products_fts,rowid,name,descr)
+    VALUES('delete',old.id,old.name,old.descr); END;
+CREATE TRIGGER IF NOT EXISTS products_au AFTER UPDATE ON products BEGIN
+  INSERT INTO products_fts(products_fts,rowid,name,descr)
+    VALUES('delete',old.id,old.name,old.descr);
+  INSERT INTO products_fts(rowid,name,descr) VALUES(new.id,new.name,new.descr); END;
 """
 
 MIGRATIONS = [
@@ -281,20 +320,25 @@ ensure_site_admin()
 
 
 # ---------- helpers ----------
-# light rate limit (POST endpoints) — must be defined before the routes that call it
-_RL: dict = {}
+# light rate limit (POST endpoints) — DB-backed so it survives restarts and
+# works across workers (v2 traffic floor). Fails open if the ops table hiccups.
 RL_LIMIT = int(os.environ.get("ISLATRADE_RL_LIMIT", "10"))
 RL_WINDOW = 60
 
 
 def rate_ok(ip: str) -> bool:
     now = time.time()
-    hits = [t for t in _RL.get(ip, []) if now - t < RL_WINDOW]
-    if len(hits) >= RL_LIMIT:
-        _RL[ip] = hits
-        return False
-    hits.append(now)
-    _RL[ip] = hits
+    try:
+        with db() as con:
+            # opportunistic prune keeps the table tiny without a cron
+            con.execute("DELETE FROM rate_limits WHERE ts < ?", (now - 600,))
+            n = con.execute("SELECT COUNT(*) FROM rate_limits WHERE ip=? AND ts>?",
+                            (ip, now - RL_WINDOW)).fetchone()[0]
+            if n >= RL_LIMIT:
+                return False
+            con.execute("INSERT INTO rate_limits(ip,ts) VALUES(?,?)", (ip, now))
+    except Exception:
+        pass
     return True
 
 
@@ -349,25 +393,38 @@ def home(request: Request):
 
 
 @app.get("/products", response_class=HTMLResponse)
-def products(request: Request, q_: str = "", cat: str = "", region: str = ""):
+def products(request: Request, q_: str = "", cat: str = "", region: str = "", page: int = 1):
+    PER_PAGE = 24
+    page = max(1, page)
     sql = """SELECT p.*, s.name sname, s.slug sslug, s.region, c.name cname, c.icon cicon
              FROM products p JOIN suppliers s ON s.id=p.supplier_id
              JOIN categories c ON c.id=p.category_id WHERE 1=1"""
-    args = []
+    cargs = []
     if q_:
-        sql += " AND (p.name LIKE ? OR p.descr LIKE ? OR s.name LIKE ?)"
-        args += [f"%{q_}%"] * 3
+        # FTS5 full-text search (MATCH) with LIKE fallback for short/punct queries
+        if len(q_) >= 3 and all(ch.isalnum() or ch.isspace() for ch in q_):
+            fts = " OR ".join(f'"{w}"' for w in q_.split())
+            sql += """ AND p.id IN (SELECT rowid FROM products_fts WHERE products_fts MATCH ?)"""
+            cargs.append(fts)
+        else:
+            sql += " AND (p.name LIKE ? OR p.descr LIKE ? OR s.name LIKE ?)"
+            cargs += [f"%{q_}%"] * 3
     if cat:
         sql += " AND c.slug=?"
-        args.append(cat)
+        cargs.append(cat)
     if region:
         sql += " AND s.region=?"
-        args.append(region)
-    rows = q(sql + " ORDER BY p.featured DESC, p.orders DESC", args)
+        cargs.append(region)
+    where_only = sql
+    total = q("SELECT COUNT(*) n FROM (" + where_only + ")", cargs, one=True)["n"]
+    pages = max(1, (total + PER_PAGE - 1) // PER_PAGE)
+    page = min(page, pages)
+    sql += " ORDER BY p.featured DESC, p.orders DESC LIMIT ? OFFSET ?"
+    rows = q(sql, cargs + [PER_PAGE, (page - 1) * PER_PAGE])
     cats = q("SELECT * FROM categories ORDER BY id")
     regions = q("SELECT DISTINCT region FROM suppliers ORDER BY region")
     return resp(request, "products.html", rows=rows, cats=cats, regions=regions,
-                q=q_, cat=cat, region=region)
+                q=q_, cat=cat, region=region, page=page, pages=pages, total=total)
 
 
 @app.get("/product/{slug}", response_class=HTMLResponse)
