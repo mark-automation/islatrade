@@ -85,6 +85,9 @@ CREATE TABLE IF NOT EXISTS rate_limits(
 CREATE INDEX IF NOT EXISTS idx_rate_ip_ts ON rate_limits(ip, ts);
 CREATE TABLE IF NOT EXISTS rfq_tokens(
   token TEXT PRIMARY KEY, email TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS buyer_sessions(
+  token TEXT PRIMARY KEY, buyer_id INTEGER REFERENCES buyers(id),
+  created REAL);
 CREATE INDEX IF NOT EXISTS idx_products_cat ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_sup ON products(supplier_id);
 CREATE INDEX IF NOT EXISTS idx_rfqs_product ON rfqs(product_id);
@@ -167,6 +170,14 @@ def current_supplier(request: Request):
         return None
     return q("SELECT s.* FROM sessions x JOIN suppliers s ON s.id=x.supplier_id WHERE x.token=? AND x.created>?",
              (tok, _t.time() - 30 * 86400), one=True)
+
+
+def current_buyer(request: Request):
+    tok = request.cookies.get("it_buyer")
+    if not tok:
+        return None
+    return q("SELECT b.* FROM buyer_sessions x JOIN buyers b ON b.id=x.buyer_id WHERE x.token=? AND x.created>?",
+             (tok, _t.time() - 90 * 86400), one=True)
 
 
 def login_supplier(email: str, pw: str):
@@ -368,6 +379,10 @@ def resp(request, template, status_code=200, **ctx):
     except Exception:
         ctx.setdefault("me", None)
     try:
+        ctx.setdefault("buyer", current_buyer(request))
+    except Exception:
+        ctx.setdefault("buyer", None)
+    try:
         import fx
         ctx.setdefault("usdphp", fx.get_usdphp())
     except Exception:
@@ -508,20 +523,22 @@ def rfq_post(request: Request, name: str = Form(""), email: str = Form(""),
     label = "New RFQ from " + name + (f" ({company})" if company else "") + \
             (f" re: {pname}" if pname else "")
     rid = None
+    tok = secrets.token_hex(8)
     with db() as con:
         cur = con.execute("INSERT INTO rfqs(product_id,category_id,name,email,phone,company,qty,message,created)"
                           " VALUES(?,?,?,?,?,?,?,?,?)",
                           (product or None, category or None, name, email, phone, company, qty, message, time.time()))
         rid = cur.lastrowid
+        con.execute("INSERT INTO rfq_tokens(token,email) VALUES(?,?)", (tok, email.lower().strip()))
         for t in sorted(x for x in targets if x):
             con.execute("INSERT INTO notifications(supplier_id,rfq_id,text,created) VALUES(?,?,?,?)",
                         (t, rid, label, time.time()))
-    return RedirectResponse("/rfq/sent", status_code=302)
+    return RedirectResponse(f"/rfq/sent?email={email.lower().strip()}&token={tok}", status_code=302)
 
 
 @app.get("/rfq/sent", response_class=HTMLResponse)
-def rfq_sent(request: Request):
-    return resp(request, "rfq_sent.html")
+def rfq_sent(request: Request, email: str = "", token: str = ""):
+    return resp(request, "rfq_sent.html", email=email, token=token)
 
 
 # ---------- JSON API ----------
@@ -685,11 +702,36 @@ def post_quote(request: Request, rfq_id: int, price: float = Form(0),
 
 
 @app.get("/rfq/tracking", response_class=HTMLResponse)
-def rfq_tracking(request: Request, email: str = ""):
-    rfqs, quotes, msgs = [], [], []
-    if email:
-        em = email.lower().strip()
-        rfqs = q("SELECT * FROM rfqs WHERE LOWER(email)=? ORDER BY created DESC", (em,))
+def rfq_tracking(request: Request, email: str = "", token: str = "",
+                 page: int = 1):
+    """Buyer quote tracking. Auth = (email, token) pair issued at RFQ submit,
+    OR a logged-in buyer account (sees all their email's RFQs).
+    Anonymous email-only lookups no longer leak other people's threads."""
+    rfqs, quotes, msgs, my_orders = [], [], [], []
+    buyer = current_buyer(request)
+    em = ""
+    if not buyer and token:
+        # token alone is enough — it's bound to the email at issuance
+        row = q("SELECT email FROM rfq_tokens WHERE token=?", (token.strip(),), one=True)
+        if not row or (email and row["email"] != email.lower().strip()):
+            return resp(request, "rfq_track.html", 403, email=email, token=token,
+                        rfqs=[], quotes=[], msgs=[], orders=[],
+                        err="Invalid tracking link.")
+        em = row["email"]
+    elif buyer:
+        em = buyer["email"]
+    elif email:
+        # legacy link without token -> require the token; don't reveal existence
+        return resp(request, "rfq_track.html", 403, email=email, token="",
+                    rfqs=[], quotes=[], msgs=[], orders=[],
+                    err="This page now requires your tracking link (check where you submitted the inquiry) or a buyer account.")
+    if em:
+        per = 20
+        total = q("SELECT COUNT(*) n FROM rfqs WHERE LOWER(email)=?", (em,), one=True)["n"]
+        pages = max(1, (total + per - 1) // per)
+        page = max(1, min(page, pages))
+        rfqs = q("SELECT * FROM rfqs WHERE LOWER(email)=? ORDER BY created DESC LIMIT ? OFFSET ?",
+                 (em, per, (page - 1) * per))
         ids = [r["id"] for r in rfqs]
         if ids:
             marks = ",".join("?" * len(ids))
@@ -699,18 +741,151 @@ def rfq_tracking(request: Request, email: str = ""):
             # thread = buyer's own messages PLUS supplier replies on the buyer's RFQs
             # (supplier rows carry supplier_id, not email -> must match by rfq_id)
             msgs = q(f"SELECT * FROM messages WHERE LOWER(email)=? OR rfq_id IN ({marks}) "
-                     f"ORDER BY created", (em, *ids))
-    return resp(request, "rfq_track.html", email=email, rfqs=rfqs, quotes=quotes, msgs=msgs)
+                     f"ORDER BY created", tuple([em, *ids]))
+            my_orders = q(f"SELECT o.*, s.name sname FROM orders o "
+                          f"JOIN suppliers s ON s.id=o.supplier_id WHERE o.rfq_id IN ({marks}) "
+                          f"ORDER BY o.created DESC", tuple(ids))
+        else:
+            pages = 1
+        return resp(request, "rfq_track.html", email=em, token=token,
+                    rfqs=rfqs, quotes=quotes, msgs=msgs, orders=my_orders,
+                    page=page, pages=pages)
+    return resp(request, "rfq_track.html", email="", token="",
+                rfqs=[], quotes=[], msgs=[], orders=[])
 
 
 @app.post("/rfq/tracking/message")
-def buyer_message(request: Request, rfq_id: int = Form(0), email: str = Form(""), text: str = Form("")):
-    if not (rfq_id and email and text):
-        return RedirectResponse(f"/rfq/tracking?email={email}", status_code=302)
+def buyer_message(request: Request, rfq_id: int = Form(0), email: str = Form(""),
+                  token: str = Form(""), text: str = Form("")):
+    # auth: token must be bound to the RFQ's email, or caller is a logged-in buyer
+    ok = False
+    em = email.lower().strip()
+    buyer = current_buyer(request)
+    if buyer and q("SELECT 1 x FROM rfqs WHERE id=? AND LOWER(email)=?",
+                   (rfq_id, buyer["email"]), one=True):
+        ok, em = True, buyer["email"]
+    elif token and rfq_id:
+        row = q("SELECT t.email FROM rfq_tokens t JOIN rfqs r ON r.id=? "
+                "WHERE t.token=? AND LOWER(r.email)=LOWER(t.email)",
+                (rfq_id, token.strip()), one=True)
+        if row:
+            ok, em = True, row["email"]
+    if not (ok and rfq_id and text):
+        return RedirectResponse("/rfq/tracking", status_code=302)
     with db() as con:
         con.execute("INSERT INTO messages(rfq_id,sender,email,text,created) VALUES(?,?,?,?,?)",
-                    (rfq_id, "buyer", email.lower(), text, _t.time()))
-    return RedirectResponse(f"/rfq/tracking?email={email}", status_code=302)
+                    (rfq_id, "buyer", em, text[:600], _t.time()))
+    return RedirectResponse(f"/rfq/tracking?token={token}", status_code=302)
+
+
+# ---------- buyer accounts ----------
+@app.get("/buyer/register", response_class=HTMLResponse)
+def buyer_register_form(request: Request):
+    return resp(request, "buyer_register.html")
+
+
+@app.post("/buyer/register")
+def buyer_register(request: Request, name: str = Form(""), company: str = Form(""),
+                   email: str = Form(""), pw: str = Form("")):
+    if not rate_ok(request.client.host if request.client else "anon"):
+        return HTMLResponse("Slow down — try again in a minute.", status_code=429)
+    name, email = name.strip(), email.lower().strip()
+    if not name or "@" not in email or len(pw) < 6:
+        return resp(request, "buyer_register.html", 400, err="Name, valid email and a password of 6+ characters are required.")
+    if q("SELECT 1 x FROM buyers WHERE email=?", (email,), one=True):
+        return resp(request, "buyer_register.html", 400, err="An account with this email already exists.")
+    tok = secrets.token_hex(16)
+    with db() as con:
+        cur = con.execute("INSERT INTO buyers(name,company,email,pw_hash,created) VALUES(?,?,?,?,?)",
+                          (name[:80], company.strip()[:120], email, hash_pw(pw), _t.time()))
+        con.execute("INSERT INTO buyer_sessions(token,buyer_id,created) VALUES(?,?,?)",
+                    (tok, cur.lastrowid, _t.time()))
+    r = RedirectResponse("/buyer/dashboard", status_code=302)
+    r.set_cookie("it_buyer", tok, httponly=True, samesite="lax",
+                 secure=bool(os.environ.get("RENDER")), max_age=90 * 86400)
+    return r
+
+
+@app.get("/buyer/login", response_class=HTMLResponse)
+def buyer_login_form(request: Request):
+    return resp(request, "buyer_login.html")
+
+
+@app.post("/buyer/login")
+def buyer_login(request: Request, email: str = Form(""), pw: str = Form("")):
+    if not rate_ok(request.client.host if request.client else "anon"):
+        return HTMLResponse("Slow down — try again in a minute.", status_code=429)
+    b = q("SELECT * FROM buyers WHERE email=?", (email.lower().strip(),), one=True)
+    if not b or not verify_pw(pw, b["pw_hash"]):
+        return resp(request, "buyer_login.html", 401, err="Invalid email or password")
+    tok = secrets.token_hex(16)
+    with db() as con:
+        con.execute("INSERT INTO buyer_sessions(token,buyer_id,created) VALUES(?,?,?)",
+                    (tok, b["id"], _t.time()))
+    r = RedirectResponse("/buyer/dashboard", status_code=302)
+    r.set_cookie("it_buyer", tok, httponly=True, samesite="lax",
+                 secure=bool(os.environ.get("RENDER")), max_age=90 * 86400)
+    return r
+
+
+@app.get("/buyer/logout")
+def buyer_logout(request: Request):
+    tok = request.cookies.get("it_buyer")
+    if tok:
+        with db() as con:
+            con.execute("DELETE FROM buyer_sessions WHERE token=?", (tok,))
+    r = RedirectResponse("/", status_code=302)
+    r.delete_cookie("it_buyer")
+    return r
+
+
+@app.get("/buyer/dashboard", response_class=HTMLResponse)
+def buyer_dashboard(request: Request):
+    b = current_buyer(request)
+    if not b:
+        return RedirectResponse("/buyer/login", status_code=302)
+    em = b["email"]
+    rfqs = q("SELECT * FROM rfqs WHERE LOWER(email)=? ORDER BY created DESC LIMIT 100", (em,))
+    ids = [r["id"] for r in rfqs]
+    quotes, msgs, my_orders = [], [], []
+    if ids:
+        marks = ",".join("?" * len(ids))
+        quotes = q(f"SELECT q.*, s.name sname FROM quotes q JOIN suppliers s ON s.id=q.supplier_id "
+                   f"WHERE q.rfq_id IN ({marks}) ORDER BY q.created", tuple(ids))
+        msgs = q(f"SELECT * FROM messages WHERE LOWER(email)=? OR rfq_id IN ({marks}) ORDER BY created",
+                 tuple([em, *ids]))
+        my_orders = q(f"SELECT o.*, s.name sname FROM orders o JOIN suppliers s ON s.id=o.supplier_id "
+                      f"WHERE o.rfq_id IN ({marks}) ORDER BY o.created DESC", tuple(ids))
+    accepted_rfq_ids = {o["rfq_id"] for o in my_orders}
+    return resp(request, "buyer_dashboard.html", b=b, rfqs=rfqs, quotes=quotes,
+                msgs=msgs, orders=my_orders, accepted_rfq_ids=accepted_rfq_ids)
+
+
+@app.post("/buyer/orders/accept")
+def buyer_accept_quote(request: Request, quote_id: int = Form(0)):
+    """Accept a supplier quote -> creates an order. Buyer must own the RFQ."""
+    b = current_buyer(request)
+    if not b:
+        return RedirectResponse("/buyer/login", status_code=302)
+    quote = q("""SELECT q.*, r.email remail, r.product_id FROM quotes q
+                 JOIN rfqs r ON r.id=q.rfq_id WHERE q.id=?""", (quote_id,), one=True)
+    if not quote or quote["remail"].lower() != b["email"]:
+        return RedirectResponse("/buyer/dashboard", status_code=302)
+    already = q("SELECT id FROM orders WHERE rfq_id=?", (quote["rfq_id"],), one=True)
+    if not already:
+        with db() as con:
+            cur = con.execute(
+                "INSERT INTO orders(rfq_id,quote_id,buyer_id,supplier_id,status,total,created)"
+                " VALUES(?,?,?,?,'placed',?,?)",
+                (quote["rfq_id"], quote["id"], b["id"], quote["supplier_id"],
+                 quote["price"], _t.time()))
+            oid = cur.lastrowid
+            con.execute("INSERT INTO notifications(supplier_id,rfq_id,text,created) VALUES(?,?,?,?)",
+                        (quote["supplier_id"], quote["rfq_id"],
+                         f"Quote accepted — Order #{oid} placed by {b['name']}", _t.time()))
+            con.execute("UPDATE products SET orders=orders+1 WHERE id=?",
+                        (quote["product_id"] or 0,))
+    return RedirectResponse("/buyer/dashboard#orders", status_code=302)
 
 
 @app.post("/supplier-admin/rfq/{rfq_id}/message")

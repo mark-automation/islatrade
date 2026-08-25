@@ -3,41 +3,71 @@
 {% block content %}
 <div class="wrap">
  <div class="crumb"><a href="/">Home</a> › Inquiry tracking</div>
+ {% if err %}<div class="panel" style="max-width:760px;margin:0 auto"><p class="form-err">{{ err }}</p>
+  <p class="muted">Tip: <a href="/buyer/register">create a free buyer account</a> to keep all your inquiries in one dashboard.</p></div>
+ {% else %}
  <div class="panel" style="max-width:760px;margin:0 auto">
   <h2 style="font-size:20px">Track your inquiries</h2>
-  <form method="get" action="/rfq/tracking" class="filters" style="margin-top:10px">
-   <input name="email" type="email" value="{{ email }}" placeholder="the email you used" required style="min-width:240px">
-   <button class="btn" style="padding:7px 20px">Check quotes</button>
-  </form>
-  {% if email %}
-   {% if not rfqs %}<p class="muted" style="margin-top:14px">No inquiries found for {{ email }}.</p>{% endif %}
-   {% for r in rfqs %}
-    <div class="row" style="border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0">
-     <b>RFQ #{{ r.id }}</b> — {{ r.qty or 'qty n/a' }} · {{ r.message[:100] }}
-     {% set nq = quotes|selectattr('rfq_id','equalto',r.id)|list %}
-     <span class="chip">{{ nq|length }} quote{{ 's' if nq|length != 1 }}</span>
-     {% for q in nq %}
-      <div style="background:#f0f7ff;border-radius:8px;padding:8px 12px;margin-top:8px">
-       <b>{{ q.sname }}</b> — <b style="color:var(--red)">₱{{ '%.2f'|format(q.price) }}</b>
-       · lead {{ q.lead_days }} days
-       <div class="muted">{{ q.message }}</div>
-      </div>
-     {% endfor %}
-     {% set thread = msgs|selectattr('rfq_id','equalto',r.id)|list %}
-     {% if thread %}<div class="grp">Messages</div>{% endif %}
-     {% for m in thread %}
-      <div class="row" style="background:#f7f9fb;border-radius:6px;padding:4px 10px;margin:3px 0">
-       <b>{{ 'You' if m.sender=='buyer' else 'Supplier' }}:</b> {{ m.text[:200] }}</div>
-     {% endfor %}
-     <form method="post" action="/rfq/tracking/message" style="display:flex;gap:6px;margin-top:8px">
-      <input type="hidden" name="rfq_id" value="{{ r.id }}">
-      <input type="hidden" name="email" value="{{ email }}">
-      <input class="f" name="text" placeholder="Message supplier…" required style="flex:1">
-      <button class="btn" style="padding:7px 16px;font-size:12.5px">Send</button>
-     </form>
+  {% if not email %}
+   <p class="muted">Open the tracking link you received when you submitted your inquiry, or
+    <a href="/buyer/login">log in to your buyer account</a>.</p>
+  {% endif %}
+  {% for r in rfqs %}
+   {% set nq = quotes|selectattr('rfq_id','equalto',r.id)|list %}
+   {% set has_order = orders|selectattr('rfq_id','equalto',r.id)|list %}
+   <div class="rfq">
+    <div class="rfq-top">
+     <span class="rfq-num">#{{ r.id }}</span>
+     <b>{{ r.qty or 'qty n/a' }}</b>
+     {% if has_order %}<span class="chip okchip">Ordered ✓</span>
+     {% elif nq %}<span class="chip">{{ nq|length }} quote{{ 's' if nq|length != 1 }}</span>
+     {% else %}<span class="chip newchip">Awaiting quotes</span>{% endif %}
     </div>
-   {% endfor %}
+    {% if r.message %}<blockquote class="rfq-msg">{{ r.message[:120] }}</blockquote>{% endif %}
+    {% for q in nq %}
+     <div class="quotecard">
+      <div class="qhead">
+       <b>{{ q.sname }}</b><b class="qprice">₱{{ '%.2f'|format(q.price) }}</b>
+      </div>
+      <div class="meta">lead {{ q.lead_days }} days{% if q.message %} · {{ q.message }}{% endif %}</div>
+      {% if buyer and not has_order %}
+       <form method="post" action="/buyer/orders/accept" style="margin-top:7px">
+        <input type="hidden" name="quote_id" value="{{ q.id }}">
+        <button class="btn gold sm">Accept quote — place order</button>
+       </form>
+      {% elif not has_order %}
+       <p class="meta" style="margin-top:6px"><a href="/buyer/register">Create a free buyer account</a> to accept this quote.</p>
+      {% endif %}
+     </div>
+    {% endfor %}
+    {% set thread = msgs|selectattr('rfq_id','equalto',r.id)|list %}
+    {% if thread %}
+     <div class="thread">
+      {% for m in thread %}
+       <div class="bubble {{ 'me' if m.sender == 'buyer' else 'them' }}">
+        <b>{% if m.sender == 'buyer' %}You{% else %}Supplier{% endif %}</b>
+        <p>{{ m.text[:300] }}</p>
+       </div>
+      {% endfor %}
+     </div>
+    {% endif %}
+    <form class="replyrow" method="post" action="/rfq/tracking/message">
+     <input type="hidden" name="rfq_id" value="{{ r.id }}">
+     <input type="hidden" name="token" value="{{ token }}">
+     <input type="hidden" name="email" value="{{ email }}">
+     <input name="text" placeholder="Message supplier…" required>
+     <button class="btn sm">Send</button>
+    </form>
+   </div>
+  {% endfor %}
+  {% if rfqs and pages > 1 %}
+   <div class="pager" style="margin-top:12px">
+    {% if page > 1 %}<a href="/rfq/tracking?token={{ token }}&email={{ email }}&page={{ page - 1 }}">← Newer</a>{% endif %}
+    <span class="meta">Page {{ page }} of {{ pages }}</span>
+    {% if page < pages %}<a href="/rfq/tracking?token={{ token }}&email={{ email }}&page={{ page + 1 }}">Older →</a>{% endif %}
+   </div>
   {% endif %}
  </div>
+ {% endif %}
 </div>
 {% endblock %}

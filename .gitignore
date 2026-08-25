@@ -4,3 +4,14 @@ islatrade.db
 islatrade.db-journal
 .env
 site/
+islatrade.db-shm
+islatrade.db-wal
+*.db-shm
+*.db-wal
+NUL-UNUSED
+server.log
+uvicorn.log
+uvicorn.err
+_shots/
+.hermes/
+scripts/__pycache__/

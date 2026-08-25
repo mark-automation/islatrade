@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Buyer sign up — IslaTrade{% endblock %}
+{% block content %}
+<div class="wrap"><div class="panel authcard">
+ <h2>Create your buyer account</h2>
+ <p class="muted">Track RFQs, compare quotes side-by-side, and accept offers to place orders.</p>
+ {% if err %}<p class="form-err">{{ err }}</p>{% endif %}
+ <form method="post" action="/buyer/register">
+  <label>Your name<input class="f" name="name" required placeholder="Juan Dela Cruz"></label>
+  <label>Company <span class="muted">(optional)</span><input class="f" name="company" placeholder="ABC Trading Corp"></label>
+  <label>Work email<input class="f" name="email" type="email" required placeholder="you@company.com"></label>
+  <label>Password <span class="muted">(6+ characters)</span><input class="f" name="pw" type="password" required minlength="6"></label>
+  <button class="btn wide-btn">Create account</button>
+ </form>
+ <p class="muted alt-auth">Already have an account? <a href="/buyer/login">Log in</a></p>
+</div></div>
+{% endblock %}

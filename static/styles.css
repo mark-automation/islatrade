@@ -216,3 +216,18 @@ footer{margin-top:48px;background:var(--navy);color:#b9cdf2;padding:26px 0;font-
  .price{font-size:14px}
  .meta{font-size:10.5px}
 }
+
+/* ================= BUYER ACCOUNTS / TRACKING ================= */
+.authcard{max-width:420px;margin:40px auto}
+.authcard h2{margin-bottom:4px}
+.authcard form{margin-top:12px}
+.form-err{background:#fdeceb;color:#c0392b;border-radius:8px;padding:9px 12px;font-size:13px;margin:10px 0}
+.alt-auth{margin-top:14px;font-size:13px}
+.wide-btn{width:100%;margin-top:16px;padding:11px}
+
+.quotecard{border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:8px;padding:10px 12px;margin-top:8px;background:#fff}
+.quotecard .qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qprice{color:var(--red);font-size:15px}
+.order-row{padding:10px 2px;border-bottom:1px solid var(--line);font-size:13.5px}
+.order-row:last-child{border-bottom:0}
+.pager{display:flex;gap:14px;align-items:center;font-size:13px}

@@ -4,7 +4,14 @@
  <div style="font-size:52px">✅</div>
  <h2 style="margin:10px 0">RFQ sent to matching suppliers</h2>
  <p class="muted">Verified suppliers in your category will respond with quotes.
-  Expect first responses within 24 hours. A copy is saved in your inquiry history.</p>
- <a class="btn" style="background:#fff;color:var(--navy);border:1px solid var(--line)" href="/rfq/tracking?email=">Track my inquiries & quotes →</a>
+  Expect first responses within 24 hours.</p>
+ {% if token %}
+  <p><b>Save this tracking link</b> — it's the only way to see your quotes without an account:</p>
+  <p style="word-break:break-all;background:#f4f8fe;border:1px solid var(--line);border-radius:8px;padding:10px">
+   <a href="/rfq/tracking?email={{ email }}&token={{ token }}">/rfq/tracking?email={{ email }}&token={{ token }}</a></p>
+  <p class="muted">Better yet, <a href="/buyer/register?email={{ email }}">create a buyer account</a> with this email
+   and track everything in one dashboard.</p>
+ {% endif %}
+ <a class="btn" style="background:#fff;color:var(--navy);border:1px solid var(--line)" href="/products">Continue browsing →</a>
 </div></div>
 {% endblock %}
