@@ -10,10 +10,20 @@ from urllib.parse import quote
 
 
 def safe_loc(path: str) -> str:
-    """Force a redirect target to stay same-origin (blocks //host and CR/LF)."""
-    if not path.startswith("/") or path.startswith("//") or "\r" in path or "\n" in path:
-        return "/"
-    return path
+    """Allowlist-validate a same-origin relative redirect target."""
+    return path if _loc_ok(path) else "/"
+
+
+_LOC_RE = None
+
+
+def _loc_ok(loc: str) -> bool:
+    """Whole-string allowlist for same-origin relative Locations."""
+    import re as _re
+    global _LOC_RE
+    if _LOC_RE is None:
+        _LOC_RE = _re.compile(r"/[A-Za-z0-9._~:/?#@!$&'()*+,;=%-]*")
+    return bool(_LOC_RE.fullmatch(loc)) and not loc.startswith("//")
 
 
 def valid_email(e: str) -> bool:
