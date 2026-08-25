@@ -6,6 +6,7 @@ Run:  uvicorn main:app --host 127.0.0.1 --port 8500
 """
 import os
 import sqlite3
+from urllib.parse import quote
 import time
 import uuid
 from pathlib import Path
@@ -466,13 +467,13 @@ def add_review(request: Request, slug: str, author: str = Form(""),
                email: str = Form(""), rating: int = Form(5), text: str = Form("")):
     p = q("SELECT id FROM products WHERE slug=?", (slug,), one=True)
     if not p or not author or not text:
-        return RedirectResponse(f"/product/{slug}", status_code=302)
+        return RedirectResponse(f"/product/{quote(slug)}", status_code=302)
     with db() as con:
         con.execute("INSERT INTO reviews(product_id,author,email,rating,text,created)"
                     " VALUES(?,?,?,?,?,?)",
                     (p["id"], author[:60], email[:80], max(1, min(5, rating)), text[:600],
                      time.time()))
-    return RedirectResponse(f"/product/{slug}#reviews", status_code=302)
+    return RedirectResponse(f"/product/{quote(slug)}#reviews", status_code=302)
 
 
 @app.get("/suppliers", response_class=HTMLResponse)
@@ -533,7 +534,9 @@ def rfq_post(request: Request, name: str = Form(""), email: str = Form(""),
         for t in sorted(x for x in targets if x):
             con.execute("INSERT INTO notifications(supplier_id,rfq_id,text,created) VALUES(?,?,?,?)",
                         (t, rid, label, time.time()))
-    return RedirectResponse(f"/rfq/sent?email={email.lower().strip()}&token={tok}", status_code=302)
+    return RedirectResponse(
+            f"/rfq/sent?email={quote(email.lower().strip())}&token={tok}",
+            status_code=302)
 
 
 @app.get("/rfq/sent", response_class=HTMLResponse)
@@ -561,7 +564,7 @@ def register(request: Request, company: str = Form(""), email: str = Form(""),
     if not company or not email or len(pw) < 6:
         return resp(request, "register.html", 400, err="Company, email and a password of 6+ chars are required")
     email = email.lower().strip()
-    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+    if len(email) <= 254 and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
         return resp(request, "register.html", 400, err="Enter a valid email address (e.g. you@company.com)")
     if q("SELECT id FROM suppliers WHERE email=?", (email,), one=True):
         return resp(request, "register.html", 400, err="That email is already registered")
@@ -775,7 +778,7 @@ def buyer_message(request: Request, rfq_id: int = Form(0), email: str = Form("")
     with db() as con:
         con.execute("INSERT INTO messages(rfq_id,sender,email,text,created) VALUES(?,?,?,?,?)",
                     (rfq_id, "buyer", em, text[:600], _t.time()))
-    return RedirectResponse(f"/rfq/tracking?token={token}", status_code=302)
+    return RedirectResponse(f"/rfq/tracking?token={quote(token)}", status_code=302)
 
 
 # ---------- buyer accounts ----------
